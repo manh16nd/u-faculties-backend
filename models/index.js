@@ -1,4 +1,3 @@
-const authorsSchema = require('./authors')
-const mongoose = require('mongoose')
+const Authors = require('./authors')
 
-exports.Authors = mongoose.model('authors', authorsSchema)
+exports.Authors = Authors

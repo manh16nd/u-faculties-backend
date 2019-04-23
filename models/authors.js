@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 
 const authors = new mongoose.Schema({
-    name: String
+    name: String,
+    student_code: String,
 })
 
-exports.default = authors
+module.exports = mongoose.model('authors', authors)
