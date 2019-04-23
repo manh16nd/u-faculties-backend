@@ -8,4 +8,12 @@ router.get('/', async (req, res) => {
     }
 )
 
+
+// Từ giờ ta quy định
+// GET để lấy dữ liệu
+// PATCH để sửa
+// POST để tạo mới
+// DELETE để xóa
+router.patch('/', rootController.changeAuthors)
+
 module.exports = router
