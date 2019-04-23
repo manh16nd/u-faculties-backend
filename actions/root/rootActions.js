@@ -29,7 +29,7 @@ exports.getHome = async () => {
 
     return await Authors
         .find({})
-        .select('_id name')
+        .select('_id name student_code')
         .lean()
 }
 

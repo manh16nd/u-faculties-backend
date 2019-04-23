@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
-const {Types} = mongoose.Schema
-const teachers = new mongoose.Schema({
-    userId: Types.ObjectId, 
+const teacher = new mongoose.Schema({
+    name: String,
 })
+
+module.exports = mongoose.model('teachers', teacher)
