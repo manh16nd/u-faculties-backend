@@ -32,11 +32,11 @@ exports.getTeachers = async (args) => {
         .limit(limit)
         .lean()
     const totalQuery = Teachers.countDocuments({})
-    const [teacher, total] = await Promise.all([teacherQuery, totalQuery])
+    const [teachers, total] = await Promise.all([teacherQuery, totalQuery])
 
     return {
         total,
-        teacher,
+        teachers,
         page,
     }
 }
