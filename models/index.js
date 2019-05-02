@@ -1,6 +1,6 @@
-const Authors = require('./authors')
-const Teachers = require('./teachers')
-
-exports.Authors = Authors
-exports.Teachers = Teachers
-
+exports.Authors = require('./authors')
+exports.Teachers = require('./teachers')
+exports.Users = require('./users')
+exports.Departments = require('./departments')
+exports.Topics = require('./topics')
+exports.Fields = require('./fields')

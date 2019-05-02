@@ -4,8 +4,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 
-const indexRouter = require('./routes/index')
-const usersRouter = require('./routes/users')
+const indexRouter = require('./routes')
 
 const app = express()
 
@@ -14,6 +13,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 
 const mongoose = require('mongoose')
+mongoose.set('debug', true)
 mongoose.connect('mongodb://webappdev:k61ca2@ds237196.mlab.com:37196/u-faculties', {useNewUrlParser: true})
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
