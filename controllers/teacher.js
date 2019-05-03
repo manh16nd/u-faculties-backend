@@ -1,4 +1,5 @@
 const getTeachersActions = require('../actions/teachers/getTeachers')
+const {verifyHeaders} = require('../helpers/bcrypt')
 
 exports.getTeachers = (req, res) => {
     const {limit, page, name, email, vnuEmail, phone, address, website, degree, position} = {...req.query}
@@ -9,10 +10,16 @@ exports.getTeachers = (req, res) => {
 }
 
 exports.addTeacher = (req, res) => {
-    const {name, email, vnuEmail, phone, address, department, website, degree, position} = {...req.body}
-    getTeachersActions.addTeacher({name, email, vnuEmail, phone, address, department, website, degree, position})
-        .then(teacher => res.send({success: true, teacher}))
-        .catch(message => res.send({success: false, message}))
+    verifyHeaders(req.headers['authorization'])
+        .then(user => res.send(user))
+        .catch(err => res.send(err.message))
+    // return
+    //
+    //
+    // const {name, email, vnuEmail, phone, address, department, website, degree, position} = {...req.body}
+    // getTeachersActions.addTeacher({name, email, vnuEmail, phone, address, department, website, degree, position})
+    //     .then(teacher => res.send({success: true, teacher}))
+    //     .catch(message => res.send({success: false, message}))
 }
 // exports.editTeacher = (req, res) => {
 //
