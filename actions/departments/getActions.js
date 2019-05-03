@@ -1,6 +1,6 @@
 const {Departments} = require('../../models')
 const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
-const {isString} = require('../../helpers/validators/typeValidators')
+const {isString, removeRedundant} = require('../../helpers/validators/typeValidators')
 
 const _validateArgs = ({limit, page, name}) => {
     const paging = validateQueryArgs({limit, page})
@@ -10,6 +10,16 @@ const _validateArgs = ({limit, page, name}) => {
         ...paging,
         name: parsedName || '',
     }
+}
+
+const _validateDepartmentArgs = (args) => {
+    const name = isString(args.name)
+    const type = isString(args.type)
+    const address = isString(args.address)
+    const phone = isString(args.phone)
+    const website = isString(args.website)
+
+    return removeRedundant({name, type, address, phone, website})
 }
 
 exports.getDepartments = async ({limit, page, name}) => {
@@ -35,4 +45,11 @@ exports.getDepartments = async ({limit, page, name}) => {
         total,
     }
 
+}
+
+exports.addDepartment = async (args) => {
+    const validatedArgs = _validateDepartmentArgs(args)
+    const department = new Departments(validatedArgs)
+
+    return await department.save()
 }

@@ -44,6 +44,6 @@ exports.getTeachers = async (args) => {
 exports.addTeacher = async (args) => {
     const validatedTeacher = _validateArgs(args)
     const teacher = new Teachers(validatedTeacher)
-    console.log(teacher)
+
     return await teacher.save()
 }

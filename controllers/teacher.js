@@ -14,3 +14,6 @@ exports.addTeacher = (req, res) => {
         .then(teacher => res.send({success: true, teacher}))
         .catch(message => res.send({success: false, message}))
 }
+// exports.editTeacher = (req, res) => {
+//
+// }

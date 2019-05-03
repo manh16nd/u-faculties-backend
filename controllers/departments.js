@@ -12,3 +12,10 @@ exports.getDepartments = (req, res) => {
             message
         }))
 }
+
+exports.addDepartment = (req, res) => {
+    const {name, type, address, phone, website} = {...req.body}
+    getDepartmentsActions.addDepartment({name, type, address, phone, website})
+        .then(department => res.send({success: true, department}))
+        .catch(message => res.send({success: false, message}))
+}

@@ -14,6 +14,7 @@ router.post('/teachers', teacher.addTeacher)
 
 const department = require('./controllers/departments')
 router.get('/departments', department.getDepartments)
+router.post('/departments', department.addDepartment)
 
 const fields =  require('./controllers/fields')
 router.get('/fields', fields.getFields)
