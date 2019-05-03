@@ -1,17 +1,15 @@
 const {Users} = require('../../models')
+const {compareHash} = require('../../helpers/bcrypt')
 
 exports.login = async (username, password) => {
-    try {
-        const user = await Users.findOne({
-            username,
-            password
-        })
-            .select('_id username password')
-            .lean()
+    console.log(username, password)
+    const user = await Users.findOne({
+        username,
+    })
+        .select('username password type')
 
-        return user
-    } catch (e) {
-        console.log(e.message || e)
-    }
+    if (!user) throw new Error('User not found')
+    if (compareHash(password, user.password)) return user
+    throw new Error('Wrong password')
 }
 

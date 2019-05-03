@@ -8,8 +8,8 @@ exports.login = (req, res) => {
             success: true,
             data,
         }))
-        .catch(message => res.send({
+        .catch(e => res.send({
             success: false,
-            message
+            message: e.message || e,
         }))
 }
