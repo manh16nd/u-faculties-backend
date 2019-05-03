@@ -15,21 +15,21 @@ const _validateArgs = ({limit, page, name}) => {
 exports.getFields = async ({limit, page, name}) => {
     const validatedArgs = _validateArgs({limit, page, name})
     const query = {
-        name: {$regex: validatedArgs.name}
+        name: {$regex: new RegExp(`${validatedArgs.name.toLowerCase()}`, 'i')}
     }
     const skip = validatedArgs.limit * (validatedArgs.page - 1)
 
-    const departmentQuery = Fields
+    const fieldsQuery = Fields
         .find(query)
         .skip(skip)
         .limit(validatedArgs.limit)
         .lean()
     const totalQuery = Fields.countDocuments({})
-    const [departments, total] = await Promise.all([departmentQuery, totalQuery])
+    const [fields, total] = await Promise.all([fieldsQuery, totalQuery])
 
     return {
         page: validatedArgs.page,
-        departments,
+        fields,
         total,
     }
 }

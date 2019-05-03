@@ -15,7 +15,9 @@ const _validateArgs = ({limit, page, name}) => {
 exports.getDepartments = async ({limit, page, name}) => {
     const validatedArgs = _validateArgs({limit, page, name})
     const query = {
-        name: {$regex: validatedArgs.name}
+        name: {
+            $regex: new RegExp(`${validatedArgs.name.toLowerCase()}`, 'i')
+        }
     }
     const skip = validatedArgs.limit * (validatedArgs.page - 1)
 

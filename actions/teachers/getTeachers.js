@@ -22,7 +22,7 @@ exports.getTeachers = async (args) => {
 
     const getQuery = Object.keys(query).reduce((q, key) => ({
         ...q,
-        [key]: {$regex: query[key]}
+        [key]: {$regex: new RegExp(`${query[key].toLowerCase()}`, 'i')}
     }), {})
     const skip = (page - 1) * limit
 
