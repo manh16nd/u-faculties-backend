@@ -32,5 +32,4 @@ exports.getFields = async ({limit, page, name}) => {
         departments,
         total,
     }
-
 }
