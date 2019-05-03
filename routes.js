@@ -10,6 +10,7 @@ router.delete('/', rootController.removeAuthor)
 
 const teacher = require('./controllers/teacher')
 router.get('/teachers', teacher.getTeachers)
+router.post('/teachers', teacher.addTeacher)
 
 const department = require('./controllers/departments')
 router.get('/departments', department.getDepartments)
