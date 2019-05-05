@@ -48,10 +48,4 @@ app.use(function (err, req, res, next) {
     res.render('error')
 })
 
-const http = require('https')
-setInterval(() => {
-    http.get('https://mnd-blog-api.herokuapp.com/', (res) => console.log(res.statusCode))
-}, 30000)
-
-
 module.exports = app
