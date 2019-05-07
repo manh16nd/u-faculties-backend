@@ -11,6 +11,11 @@ exports.compareHash = (a, b) => {
     return bcrypt.compareSync(a, b)
 }
 
+exports.createHash = (password) => {
+    let salt = bcrypt.genSaltSync(12)
+    return bcrypt.hashSync(password, salt)
+}
+
 exports.signJwt = (sign) => jwt.sign(sign, secretKey)
 
 exports.verifyHeaders = (header) => {

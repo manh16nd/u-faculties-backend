@@ -21,5 +21,6 @@ router.get('/fields', fields.getFields)
 
 const authController = require('./controllers/auth')
 router.post('/auth/login', authController.login)
+router.post('/auth/addUser', authController.createUser)
 
 module.exports = router

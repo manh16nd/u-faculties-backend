@@ -1,5 +1,6 @@
 const {Users} = require('../../models')
-const {compareHash, signJwt} = require('../../helpers/bcrypt')
+const {createHash, compareHash, signJwt} = require('../../helpers/bcrypt')
+const {removeRedundant, isString} = require('../../helpers/validators/typeValidators')
 
 exports.login = async (username, password) => {
     console.log(username, password)
@@ -16,5 +17,21 @@ exports.login = async (username, password) => {
         type: user.type,
         token: signJwt({username, type: user.type})
     }
+}
+
+const _validateArgs = (username, password, type) => {
+    const validUsername = isString(username)
+    const validPassword = isString(password)
+    const validType = isString(type)
+    console.log("username: " + validUsername + " password: " + validPassword + " type: " + validType)
+    return removeRedundant({username: validUsername, password: validPassword, type: validType})
+}
+
+exports.addUser = async (username, password, type) => {
+    const hash = createHash(password)
+    const validatedArgs = _validateArgs(username, hash, type)
+    console.log(validatedArgs)
+    const user = new Users(validatedArgs)
+    return await user.save()
 }
 
