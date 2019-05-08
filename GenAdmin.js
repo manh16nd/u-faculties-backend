@@ -12,7 +12,7 @@ const hash = hashText(password)
 const user = new Users({
     username,
     password: hash,
-    type: 'admasdin'
+    type: 'admin'
 })
 
 user.save().then(ok => console.log(ok)).catch(err => console.log(err))
