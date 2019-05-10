@@ -15,7 +15,7 @@ const _validateArgs = ({limit, page, name}) => {
 const _validateFieldArgs = (args) => {
     const name = isString(args.name)
     const parent = isObjectId(args.parent)
-    return removeRedundant(name, parent)
+    return removeRedundant({name, parent})
 }
 
 exports.getFields = async ({limit, page, name}) => {
@@ -41,7 +41,9 @@ exports.getFields = async ({limit, page, name}) => {
 }
 
 exports.addField = async (args) => {
+    console.log(args.name)
     const validatedArgs = _validateFieldArgs(args)
+    console.log(validatedArgs)
     const field = new Fields(validatedArgs)
     return await field.save()
 }
