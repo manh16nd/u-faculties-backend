@@ -1,4 +1,4 @@
-const rootGetActions = require('../actions/root/getActions')
+const rootGetActions = require('../actions/root/rootActions')
 
 exports.getHome = async () => {
     return await rootGetActions.getHome()

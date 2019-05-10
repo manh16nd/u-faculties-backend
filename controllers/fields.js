@@ -1,4 +1,4 @@
-const getDepartmentsActions = require('../actions/fields/getActions')
+const getDepartmentsActions = require('../actions/fields/fieldsActions')
 
 exports.getFields = (req, res) => {
     const {limit, page, name} = {...req.query, ...req.body}

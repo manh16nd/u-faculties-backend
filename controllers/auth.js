@@ -1,4 +1,4 @@
-const loginActions = require('../actions/auth/getActions')
+const loginActions = require('../actions/auth/authActions')
 
 exports.login = (req, res) => {
     const {username, password} = {...req.body}
