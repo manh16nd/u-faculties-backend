@@ -56,7 +56,6 @@ exports.addDepartment = async (args) => {
 }
 
 exports.editDepartment = async (args) => {
-    if (!args.id) throw new Error('Missing ID')
     const validatedArgs = _validateDepartmentArgs(args)
     const {id, ...departmentDetails} = validatedArgs
     const department = await Departments.findOne({

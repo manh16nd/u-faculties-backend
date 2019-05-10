@@ -24,5 +24,6 @@ router.get('/fields', fields.getFields)
 const authController = require('./controllers/authController')
 router.post('/auth/login', authController.login)
 router.post('/auth/addUser', authController.createUser)
+router.delete('/auth/deleteUser/:id', authController.deleteUser)
 
 module.exports = router

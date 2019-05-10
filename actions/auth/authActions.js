@@ -35,3 +35,12 @@ exports.addUser = async (username, password, type) => {
     return await user.save()
 }
 
+exports.deleteUser = async (id) => {
+    const ID = isString(id)
+    const user = await Users.findOne({
+        _id: ID
+    }).select('_id')
+    if(!user) throw new Error('User not found')
+    return await user.delete()
+}
+

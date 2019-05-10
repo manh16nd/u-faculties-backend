@@ -8,15 +8,15 @@ exports.login = (req, res) => {
             success: true,
             data,
         }))
-        .catch(e => res.send({
+        .catch(err => res.send({
             success: false,
-            message: e.message || e,
+            message: err.message || err,
         }))
 }
 
 exports.createUser = (req, res) => {
-    const {username, password, type} = {...req.body}
-
+    const {username, password} = {...req.body}
+    const type = 'teacher'
     loginActions.addUser(username, password, type)
         .then(data => res.send({
             success: true,
@@ -26,4 +26,18 @@ exports.createUser = (req, res) => {
             success: false,
             message: err.message || err,
         }))
+}
+
+exports.deleteUser = (req, res) => {
+    const {id} = {...req.params}
+    loginActions.deleteUser(id)
+        .then(data => res.send({
+            success: true,
+            data,
+        }))
+        .catch(err => res.send({
+            success: false,
+            message: err.message || err,
+        }))
+
 }
