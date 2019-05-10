@@ -1,5 +1,7 @@
 const express = require('express')
 const router = express.Router()
+const auth = require('./middlewares/auth')
+
 const rootController = require('./controllers/rootController')
 
 router.get('/', (req, res) => res.send('ok'))
@@ -28,7 +30,7 @@ router.delete('/fields/:id', fields.deleteField)
 
 const authController = require('./controllers/authController')
 router.post('/auth/login', authController.login)
-router.post('/auth/addUser', authController.createUser)
+router.post('/auth/addUser', auth.isAdmin, authController.createUser)
 router.delete('/auth/deleteUser/:id', authController.deleteUser)
 
 module.exports = router
