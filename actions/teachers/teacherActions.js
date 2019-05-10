@@ -67,3 +67,24 @@ exports.addTeacher = async (args) => {
 
     return await teacher.save()
 }
+
+exports.editTeacher = async (args) => {
+    const validatedArgs = _validateNewTeacherArgs(args)
+    const {id, ...teacherDetails} = validatedArgs
+    const teacher = await Teachers.findOne({
+        _id: id
+    }).select('_id')
+    if(!teacher) throw new Error('Teacher not found')
+
+    for(let key in teacherDetails) teacher[key] = teacherDetails[key]
+    return await teacher.save()
+}
+
+exports.deleteTeacher = async (id) => {
+    const ID = isString(id)
+    const teacher = await Teachers.findOne({
+        _id: id
+    }).select('_id')
+    if(!teacher) throw new Error('Teacher not found')
+    return await teacher.delete()
+}

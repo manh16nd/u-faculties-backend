@@ -11,6 +11,8 @@ router.delete('/', rootController.removeAuthor)
 const teacher = require('./controllers/teacherController')
 router.get('/teachers', teacher.getTeachers)
 router.post('/teachers', teacher.addTeacher)
+router.patch('/teacher/:id', teacher.editTeacher)
+router.delete('teacher/:id', teacher.deleteTeacher)
 
 const department = require('./controllers/departmentController')
 router.get('/departments', department.getDepartments)
