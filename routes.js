@@ -15,9 +15,9 @@ router.post('/teachers', teacher.addTeacher)
 const department = require('./controllers/departmentController')
 router.get('/departments', department.getDepartments)
 router.post('/departments', department.addDepartment)
-router.patch('/departments', department.editDepartment)
+router.patch('/departments/:id', department.editDepartment)
 
-const fields =  require('./controllers/fieldController')
+const fields = require('./controllers/fieldController')
 router.get('/fields', fields.getFields)
 
 const authController = require('./controllers/authController')

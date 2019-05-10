@@ -18,8 +18,10 @@ const _validateDepartmentArgs = (args) => {
     const address = isString(args.address)
     const phone = isString(args.phone)
     const website = isString(args.website)
+    const id = isString(args.id)
+    if (!id) throw new Error('Missing ID')
 
-    return removeRedundant({name, type, address, phone, website})
+    return removeRedundant({id, name, type, address, phone, website})
 }
 
 exports.getDepartments = async ({limit, page, name}) => {
@@ -56,7 +58,12 @@ exports.addDepartment = async (args) => {
 
 exports.editDepartment = async (args) => {
     const validatedArgs = _validateDepartmentArgs(args)
-    const department = new Departments(validatedArgs)
+    const {id, ...departmentDetails} = validatedArgs
+    const department = await Departments.findOne({
+        _id: id
+    }).select('_id')
+    if (!department) throw new Error('Department not found')
 
-    return await department.updateOne()
+    for (let key in departmentDetails) department[key] = departmentDetails[key]
+    return await department.save()
 }
