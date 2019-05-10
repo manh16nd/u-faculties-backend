@@ -1,4 +1,4 @@
-const getTeachersActions = require('../actions/teachers/getTeachers')
+const getTeachersActions = require('../actions/teachers/getActions')
 const {verifyHeaders} = require('../helpers/bcrypt')
 
 exports.getTeachers = (req, res) => {

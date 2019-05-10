@@ -1,8 +1,7 @@
-const rootGetActions = require('../actions/root/rootActions')
+const rootGetActions = require('../actions/root/getActions')
 
 exports.getHome = async () => {
-    const resp = await rootGetActions.getHome()
-    return resp
+    return await rootGetActions.getHome()
 }
 
 exports.addAuthor = (req, res) => {
