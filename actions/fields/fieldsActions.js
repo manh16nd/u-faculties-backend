@@ -1,6 +1,6 @@
 const {Fields} = require('../../models')
 const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
-const {isString} = require('../../helpers/validators/typeValidators')
+const {isString, isObjectId, removeRedundant} = require('../../helpers/validators/typeValidators')
 
 const _validateArgs = ({limit, page, name}) => {
     const paging = validateQueryArgs({limit, page})
@@ -10,6 +10,12 @@ const _validateArgs = ({limit, page, name}) => {
         ...paging,
         name: parsedName || '',
     }
+}
+
+const _validateFieldArgs = (args) => {
+    const name = isString(args.name)
+    const parent = isObjectId(args.parent)
+    return removeRedundant(name, parent)
 }
 
 exports.getFields = async ({limit, page, name}) => {
@@ -32,4 +38,32 @@ exports.getFields = async ({limit, page, name}) => {
         fields,
         total,
     }
+}
+
+exports.addField = async (args) => {
+    const validatedArgs = _validateFieldArgs(args)
+    const field = new Fields(validatedArgs)
+    return await field.save()
+}
+
+exports.editField = async (args) => {
+    const validatedArgs = _validateFieldArgs(args)
+    const {id, ...fieldDetails} = validatedArgs
+    const field = await Fields.findOne({
+        _id: id
+    }).select('_id')
+    if(!field) throw new Error('Field not found')
+
+    for (let key in fieldDetails) field[key] = fieldDetails[key]
+    return await field.save()
+}
+
+exports.deleteField = async (id) => {
+    const ID = isString(id)
+    const field = await Fields.findOne({
+        _id: ID
+    }).select('_id')
+    if(!field) throw new Error('Field not found')
+    return await field.delete()
+
 }

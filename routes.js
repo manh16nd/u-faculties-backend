@@ -20,6 +20,9 @@ router.delete('/departments/:id', department.deleteDepartment)
 
 const fields = require('./controllers/fieldController')
 router.get('/fields', fields.getFields)
+router.post('/fields', fields.addFields)
+router.patch('/fields/:id', fields.editFields)
+router.delete('/fields/:id', fields.deleteField)
 
 const authController = require('./controllers/authController')
 router.post('/auth/login', authController.login)
