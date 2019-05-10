@@ -23,3 +23,10 @@ exports.editDepartment = (req, res) => {
         .then(department => res.send({success: true, department}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }
+
+exports.deleteDepartment = (req, res) => {
+    const {id} = {...req.params}
+    getDepartmentsActions.deleteDepartment(id)
+        .then(department => res.send({success: true, department}))
+        .catch(err => res.send({success: false, message: err.message || err}))
+}
