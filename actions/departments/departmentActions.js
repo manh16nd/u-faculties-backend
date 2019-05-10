@@ -53,3 +53,10 @@ exports.addDepartment = async (args) => {
 
     return await department.save()
 }
+
+exports.editDepartment = async (args) => {
+    const validatedArgs = _validateDepartmentArgs(args)
+    const department = new Departments(validatedArgs)
+
+    return await department.updateOne()
+}

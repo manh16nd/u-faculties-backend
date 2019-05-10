@@ -19,3 +19,10 @@ exports.addDepartment = (req, res) => {
         .then(department => res.send({success: true, department}))
         .catch(message => res.send({success: false, message}))
 }
+
+exports.editDepartment = (req, res) => {
+    const {name, type, address, phone, website} = {...req.body}
+    getDepartmentsActions.editDepartment({name, type, address, phone, website})
+        .then(department => res.send({success: true, department}))
+        .catch(message => res.send({success: false, message}))
+}
