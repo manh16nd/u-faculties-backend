@@ -6,6 +6,7 @@ const rootController = require('./controllers/rootController')
 
 router.get('/', rootController.home)
 router.get('/ping', rootController.home)
+router.get('/errorExample', rootController.fakeError)
 
 const teacher = require('./controllers/teacherController')
 router.get('/teachers', teacher.getTeachers)

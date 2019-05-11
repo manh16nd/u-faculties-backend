@@ -7,6 +7,10 @@ exports.home = (req, res) => {
     })
 }
 
+exports.fakeError = (req, res) => {
+    res.send(1 / 0)
+}
+
 exports.getHome = async () => {
     return await rootGetActions.getHome()
 }
