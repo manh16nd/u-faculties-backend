@@ -4,11 +4,8 @@ const auth = require('./middlewares/auth')
 
 const rootController = require('./controllers/rootController')
 
-router.get('/', (req, res) => res.send('ok'))
-
-router.post('/', rootController.addAuthor)
-router.patch('/', rootController.changeAuthor)
-router.delete('/', rootController.removeAuthor)
+router.get('/', rootController.home)
+router.get('/ping', rootController.home)
 
 const teacher = require('./controllers/teacherController')
 router.get('/teachers', teacher.getTeachers)

@@ -1,5 +1,12 @@
 const rootGetActions = require('../actions/root/rootActions')
 
+exports.home = (req, res) => {
+    res.send({
+        success: 'true',
+        data: 'pong'
+    })
+}
+
 exports.getHome = async () => {
     return await rootGetActions.getHome()
 }
