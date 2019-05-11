@@ -11,7 +11,7 @@ exports.compareHash = (a, b) => {
     return bcrypt.compareSync(a, b)
 }
 
-exports.createHash = (password) => {
+exports.createHash = (text) => {
     return bcrypt.hashSync(text, saltRounds)
 }
 
