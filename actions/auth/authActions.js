@@ -19,6 +19,10 @@ exports.login = async (username, password) => {
     }
 }
 
+exports.changePassword = async ({username, password, oldPassword, currentUser}) => {
+    return {username, password, oldPassword, currentUser}
+}
+
 const _validateArgs = (username, password, type) => {
     const validUsername = isString(username)
     const validPassword = isString(password)

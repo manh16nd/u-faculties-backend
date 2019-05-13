@@ -1,9 +1,9 @@
-const loginActions = require('../actions/auth/authActions')
+const authActions = require('../actions/auth/authActions')
 
 exports.login = (req, res) => {
     const {username, password} = {...req.body}
 
-    loginActions.login(username, password)
+    authActions.login(username, password)
         .then(data => res.send({
             success: true,
             data,
@@ -14,10 +14,24 @@ exports.login = (req, res) => {
         }))
 }
 
+exports.changePassword = (req, res) => {
+    const {username, password, oldPassword, currentUser} = {...req.body}
+
+    authActions.changePassword({username, password, oldPassword, currentUser})
+        .then(data => res.send({
+            success: true,
+            data,
+        }))
+        .catch(err => res.send({
+            success: false,
+            message: err.message || err
+        }))
+}
+
 exports.createUser = (req, res) => {
     const {username, password} = {...req.body}
     const type = 'teacher'
-    loginActions.addUser(username, password, type)
+    authActions.addUser(username, password, type)
         .then(data => res.send({
             success: true,
             data,
@@ -30,7 +44,7 @@ exports.createUser = (req, res) => {
 
 exports.deleteUser = (req, res) => {
     const {id} = {...req.params}
-    loginActions.deleteUser(id)
+    authActions.deleteUser(id)
         .then(data => res.send({
             success: true,
             data,
