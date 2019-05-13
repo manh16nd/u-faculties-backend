@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 exports.sendMail = async ({receiver, title, body}) => {
     const mailOptions = {
-        from: user,
+        from: 'u-Faculties',
         to: receiver,
         subject: title,
         html: body,
