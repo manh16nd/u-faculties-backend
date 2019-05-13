@@ -74,7 +74,7 @@ exports.addTeacher = async (args) => {
     if (existUser) throw new Error('Username existed')
 
     const newUser = new Users({
-        user: validatedTeacher.username,
+        username: validatedTeacher.username,
         status: 'inactive',
         type: 'teacher',
         email: validatedTeacher.email
@@ -83,7 +83,7 @@ exports.addTeacher = async (args) => {
 
     const newTeacher = new Teachers({...validatedTeacher, user: user._id})
     const token = signJwt({
-        user: validatedTeacher.username
+        username: validatedTeacher.username
     })
     const teacher = await newTeacher.save()
     const title = 'u-Faculties registration'
