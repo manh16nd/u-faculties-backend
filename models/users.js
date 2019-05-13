@@ -5,7 +5,7 @@ const users = new mongoose.Schema({
     password: String,
     email: String,
     status: {
-        status: String,
+        type: String,
         enum: ['active', 'inactive']
     },
     type: {
