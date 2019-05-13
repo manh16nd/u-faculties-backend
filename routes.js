@@ -10,7 +10,7 @@ router.get('/errorExample', rootController.fakeError)
 
 const teacher = require('./controllers/teacherController')
 router.get('/teachers', teacher.getTeachers)
-router.post('/teachers', teacher.addTeacher)
+router.post('/teachers', auth.isAdmin, teacher.addTeacher)
 router.patch('/teacher/:id', teacher.editTeacher)
 router.delete('teacher/:id', teacher.deleteTeacher)
 

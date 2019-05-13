@@ -8,7 +8,7 @@ exports.home = (req, res) => {
 }
 
 exports.fakeError = (req, res) => {
-    res.send(1 / 0)
+    throw new Error('123')
 }
 
 exports.getHome = async () => {

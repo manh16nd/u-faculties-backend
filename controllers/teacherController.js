@@ -10,9 +10,9 @@ exports.getTeachers = (req, res) => {
 }
 
 exports.addTeacher = (req, res) => {
-    const {name, email, vnuEmail, phone, address, website, degree, position, department} = {...req.body}
+    const {username, name, email, vnuEmail, phone, address, website, degree, position, department} = {...req.body}
 
-    getTeachersActions.addTeacher({name, email, vnuEmail, phone, address, website, degree, position, department})
+    getTeachersActions.addTeacher({username, name, email, vnuEmail, phone, address, website, degree, position, department})
         .then(data => res.send({success: true, data}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }
