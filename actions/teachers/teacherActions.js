@@ -87,7 +87,7 @@ exports.addTeacher = async (args) => {
     })
     const teacher = await newTeacher.save()
     const title = 'u-Faculties registration'
-    const body = `Your change password token: ```${token}````
+    const body = `Your change password token: ${token}`
     const mail = await sendMail({receiver: validatedTeacher.email, title, body: convertMdToHtml(body)})
 
     return {user, teacher, mail}
