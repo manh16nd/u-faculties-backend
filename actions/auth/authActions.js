@@ -41,11 +41,10 @@ exports.changePassword = async ({username, password, oldPassword, currentUser}) 
             throw new Error('Wrong password')
         }
     } else {
-        if (currentUser.username === username) {
-            user.password = password
-            user.status = 'active'
-            await user.save()
-        } else throw new Error('Wrong token')
+        if (currentUser.username !== username) throw new Error('Wrong token')
+        user.password = password
+        user.status = 'active'
+        await user.save()
     }
 
     const value = createHash(new Date().getTime())
