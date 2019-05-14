@@ -48,10 +48,16 @@ exports.changePassword = async ({username, password, oldPassword, currentUser}) 
             await user.save()
         } else throw new Error('Wrong token')
     }
+
+    const value = createHash(new Date().getTime())
+    const newToken = new Tokens({user: user._id, value})
+    await Tokens.deleteMany({user: user._id})
+    await newToken.save()
+
     return {
         username,
         type: user.type,
-        token: signJwt({username, type: user.type})
+        token: signJwt({username, type: user.type, value})
     }
 }
 

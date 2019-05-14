@@ -46,7 +46,8 @@ exports.isAdmin = (req, res, next) => {
 
 exports.verifyUser = (req, res, next) => {
     const {authorization} = {...req.headers}
-    if (!authorization) return res.status(403).send({success: 'false', message: 'Permission denied'})
+    req.body.currentUser = {}
+    if (!authorization) return next()
     try {
         const user = verifyHeaders(authorization)
         getUserInfo(user)
@@ -57,10 +58,11 @@ exports.verifyUser = (req, res, next) => {
             })
             .catch(err => {
                 console.log(err)
-                return res.status(403).send({success: 'false', message: 'Permission denied'})
+                next()
             })
     } catch (e) {
-        return res.status(403).send({success: 'false', message: 'Permission denied'})
+        console.log(e.message || e)
+        next()
     }
 
 }
