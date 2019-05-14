@@ -1,4 +1,4 @@
-const {Users} = require('../../models')
+const {Users, Tokens} = require('../../models')
 const {createHash, compareHash, signJwt} = require('../../helpers/bcrypt')
 const {removeRedundant, isString} = require('../../helpers/validators/typeValidators')
 
@@ -7,6 +7,10 @@ exports.login = async (username, password) => {
     const user = await Users.findOne({
         username,
     })
+        .populate({
+            path: 'token',
+            model: Tokens,
+        })
         .select('username password type')
 
     if (!user) throw new Error('User not found')

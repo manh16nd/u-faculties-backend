@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const tokens = new mongoose.Schema({
-    user: mongoose.Types.ObjectId,
+    user: {type: mongoose.Types.ObjectId, ref: 'users'},
     value: String,
 })
 
