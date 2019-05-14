@@ -16,7 +16,7 @@ const getUserInfo = (data) => new Promise((resolve, reject) => {
                     console.log(token.value === data.value)
                     console.log(data.value)
                     if (!token || token.value !== data.value) return reject('invalid')
-                    return resolve(true)
+                    return resolve(data)
                 })
                 .catch(err => reject('Invalid'))
         })
@@ -28,10 +28,17 @@ exports.isAdmin = (req, res, next) => {
     if (!authorization) return res.status(403).send({success: 'false', message: 'Permission denied'})
     try {
         const user = verifyHeaders(authorization)
-        if (user.type !== 'admin') return res.status(403).send({success: 'false', message: 'Permission denied'})
+        getUserInfo(user)
+            .then(success => {
+                if (user.type !== 'admin') return res.status(403).send({success: 'false', message: 'Permission denied'})
 
-        req.body.currentUser = user
-        next()
+                req.body.currentUser = user
+                next()
+            })
+            .catch(err => {
+                console.log(err)
+                return res.status(403).send({success: 'false', message: 'Permission denied'})
+            })
     } catch (e) {
         return res.status(403).send({success: 'false', message: 'Permission denied'})
     }
