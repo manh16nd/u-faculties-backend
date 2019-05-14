@@ -20,7 +20,28 @@ exports.login = async (username, password) => {
 }
 
 exports.changePassword = async ({username, password, oldPassword, currentUser}) => {
-    return {username, password, oldPassword, currentUser}
+    let user = await Users.findOne({username})
+    let newPassword = createHash(password);
+    if(!user) throw new Error('User not found')
+    if (user.password && user.status === 'active') {
+        if (compareHash(oldPassword, user.password)) {
+            user.password = newPassword
+            await user.save()
+        } else {
+            throw new Error('Wrong password')
+        }
+    }
+    else {
+        if(currentUser.username === username){
+            user.password = password
+            user.status = 'active'
+            await user.save()
+        } else throw new Error('Wrong token')
+    }
+    return {
+        username,
+        type: user.type,
+        token: signJwt({username, type:user.type})}
 }
 
 const _validateArgs = (username, password, type) => {
@@ -34,7 +55,6 @@ const _validateArgs = (username, password, type) => {
 exports.addUser = async (username, password, type) => {
     const hash = createHash(password)
     const validatedArgs = _validateArgs(username, hash, type)
-    console.log(validatedArgs)
     const user = new Users(validatedArgs)
     return await user.save()
 }
