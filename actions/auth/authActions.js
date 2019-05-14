@@ -20,7 +20,6 @@ exports.login = async (username, password) => {
 
     return {
         username,
-        user,
         type: user.type,
         token: signJwt({username, type: user.type, value})
     }

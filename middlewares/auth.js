@@ -13,8 +13,6 @@ const getUserInfo = (data) => new Promise((resolve, reject) => {
                 user: user._id
             })
                 .then(token => {
-                    console.log(token.value === data.value)
-                    console.log(data.value)
                     if (!token || token.value !== data.value) return reject('invalid')
                     return resolve(data)
                 })
