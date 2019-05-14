@@ -1,4 +1,27 @@
 const {verifyHeaders} = require('../helpers/bcrypt')
+const {Users, Tokens} = require('../models')
+
+const getUserInfo = (data) => new Promise((resolve, reject) => {
+    Users.findOne({
+        username: data.username,
+        type: data.type,
+    })
+        .then(user => {
+            if (!user) return reject('Invalid')
+
+            Tokens.findOne({
+                user: user._id
+            })
+                .then(token => {
+                    console.log(token.value === data.value)
+                    console.log(data.value)
+                    if (!token || token.value !== data.value) return reject('invalid')
+                    return resolve(true)
+                })
+                .catch(err => reject('Invalid'))
+        })
+        .catch(err => reject(err.message || err))
+})
 
 exports.isAdmin = (req, res, next) => {
     const {authorization} = {...req.headers}
@@ -19,8 +42,16 @@ exports.verifyUser = (req, res, next) => {
     if (!authorization) return res.status(403).send({success: 'false', message: 'Permission denied'})
     try {
         const user = verifyHeaders(authorization)
-        req.body.currentUser = user
-        next()
+        getUserInfo(user)
+            .then(success => {
+                console.log(success)
+                req.body.currentUser = user
+                next()
+            })
+            .catch(err => {
+                console.log(err)
+                return res.status(403).send({success: 'false', message: 'Permission denied'})
+            })
     } catch (e) {
         return res.status(403).send({success: 'false', message: 'Permission denied'})
     }

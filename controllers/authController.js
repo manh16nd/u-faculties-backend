@@ -14,6 +14,18 @@ exports.login = (req, res) => {
         }))
 }
 
+exports.verify = (req, res) => {
+    const {currentUser} = {...req.body}
+    authActions.verify(currentUser)
+        .then(data => res.send({
+            success: true,
+            data,
+        }))
+        .catch(err => res.send({
+            success: false,
+            message: err.message || err,
+        }))
+}
 exports.changePassword = (req, res) => {
     const {username, password, oldPassword, currentUser} = {...req.body}
 
