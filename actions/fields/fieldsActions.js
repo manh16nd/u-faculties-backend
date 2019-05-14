@@ -66,5 +66,4 @@ exports.deleteField = async (id) => {
     }).select('_id')
     if(!field) throw new Error('Field not found')
     return await field.delete()
-
 }

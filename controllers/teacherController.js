@@ -10,9 +10,9 @@ exports.getTeachers = (req, res) => {
 }
 
 exports.addTeacher = (req, res) => {
-    const {username, name, email, vnuEmail, phone, address, website, degree, position, department} = {...req.body}
+    const {name, email, vnuEmail, phone, address, website, degree, position, department, field} = {...req.body}
 
-    getTeachersActions.addTeacher({username, name, email, vnuEmail, phone, address, website, degree, position, department})
+    getTeachersActions.addTeacher({name, email, vnuEmail, phone, address, website, degree, position, department, field})
         .then(data => res.send({success: true, data}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }
@@ -28,7 +28,7 @@ exports.editTeacher = (req, res) => {
 exports.deleteTeacher = (req, res) => {
     const {id} = {...req.params}
 
-    getTeachersActions.deleteTeacher(id)
+    getTeachersActions.editTeacher({id})
         .then(teacher => res.send({success: true, teacher}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }

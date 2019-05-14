@@ -56,7 +56,7 @@ exports.addUser = async (username, password, type) => {
     const hash = createHash(password)
     const validatedArgs = _validateArgs(username, hash, type)
     const user = new Users(validatedArgs)
-    return await user.save()
+    return (await user.save()).toJSON()
 }
 
 exports.deleteUser = async (id) => {
