@@ -12,7 +12,8 @@ exports.compareHash = (a, b) => {
 }
 
 exports.createHash = (text) => {
-    return bcrypt.hashSync(text, saltRounds)
+    const value = text + ''
+    return bcrypt.hashSync(value, saltRounds)
 }
 
 exports.signJwt = (sign) => jwt.sign(sign, secretKey)
