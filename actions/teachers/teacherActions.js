@@ -1,4 +1,4 @@
-const {Teachers, Departments} = require('../../models')
+const {Teachers, Fields, Departments} = require('../../models')
 const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
 const {isString, removeRedundant, isObjectId} = require('../../helpers/validators/typeValidators')
 
@@ -64,7 +64,7 @@ exports.getTeachers = async (args) => {
 exports.addTeacher = async (args) => {
     const validatedTeacher = _validateNewTeacherArgs(args)
     const teacher = new Teachers(validatedTeacher)
-    //add teacher id to field
+
     return await teacher.save()
 }
 
@@ -75,15 +75,20 @@ exports.editTeacher = async (args) => {
         _id: id
     }).select('_id')
     if(!teacher) throw new Error('Teacher not found')
-
     for(let key in teacherDetails) teacher[key] = teacherDetails[key]
+    //add teacher id to field
+    const field = await Fields.findOne({
+        _id: args.field
+    }).select('_id')
+    if(!field) throw new Error('Field not found')
+    field.teacher.append(id)
     return await teacher.save()
 }
 
 exports.deleteTeacher = async (id) => {
     const ID = isString(id)
     const teacher = await Teachers.findOne({
-        _id: id
+        _id: ID
     }).select('_id')
     if(!teacher) throw new Error('Teacher not found')
     return await teacher.delete()
