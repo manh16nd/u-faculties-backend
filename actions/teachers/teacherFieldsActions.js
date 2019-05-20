@@ -29,7 +29,7 @@ exports.addTeacherToFields = async ({teacherId, fields}) => {
     const teacher = await Teachers.findOne({
         _id: teacherId
     }).select('_id fields')
-    if (!teacher) throw new Error('Teacher not found')
+    if (!teacher || teacher.type ) throw new Error('Teacher not found')
 
     const validFields = _validateFields(fields, teacher.fields)
 
