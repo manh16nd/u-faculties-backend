@@ -52,3 +52,13 @@ exports.uploadAvatar = (req, res) => {
         .then(avatar => res.send({success: true, avatar}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }
+
+const teacherFieldsActions = require('../actions/teachers/teacherFieldsActions')
+
+exports.addTeacherToFields = (req, res) => {
+    const {id, fields} = {...req.params, ...req.body}
+
+    teacherFieldsActions.addTeacherToFields({teacherId: id, fields})
+        .then(teacher => res.send({success: true, teacher}))
+        .catch(err => res.send({success: false, message: err.message || err}))
+}

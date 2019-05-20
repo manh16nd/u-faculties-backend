@@ -15,6 +15,11 @@ const teacher = new mongoose.Schema({
     },
     position: String,
     avatar: String,
+    fields: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'fields',
+        default: []
+    }]
 })
 
 module.exports = mongoose.model('teachers', teacher)
