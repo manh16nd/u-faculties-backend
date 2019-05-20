@@ -17,7 +17,7 @@ router.patch('/teacher/:id', teacher.editTeacher)
 router.delete('teacher/:id', teacher.deleteTeacher)
 router.post('/teachers/:id/avatar', auth.isAdmin, upload.single('avatar'), teacher.uploadAvatar)
 router.post('/teachers/:id/fields', auth.isAdmin, teacher.addTeacherToFields)
-router.delete('/teachers/:id/fields', auth.isAdmin, null)
+router.delete('/teachers/:id/fields', auth.isAdmin, teacher.removeTeacherFromFields)
 
 const department = require('./controllers/departmentController')
 router.get('/departments', department.getDepartments)

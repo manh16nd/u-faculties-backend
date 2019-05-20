@@ -62,3 +62,11 @@ exports.addTeacherToFields = (req, res) => {
         .then(teacher => res.send({success: true, teacher}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }
+
+exports.removeTeacherFromFields = (req, res) => {
+    const {id, fields} = {...req.params, ...req.body}
+
+    teacherFieldsActions.removeTeacherFromFields({teacherId: id, fields})
+        .then(teacher => res.send({success: true, teacher}))
+        .catch(err => res.send({success: false, message: err.message || err}))
+}
