@@ -1,5 +1,8 @@
-const {Teachers, Fields, Departments} = require('../../models')
+const {Teachers, Departments, Users} = require('../../models')
 const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
+const {sendMail} = require('../../helpers/mail')
+const {convertMdToHtml} = require('../../helpers/markdown')
+const {signJwt} = require('../../helpers/bcrypt')
 const {isString, removeRedundant, isObjectId} = require('../../helpers/validators/typeValidators')
 
 const _validateArgs = (args) => {
@@ -17,6 +20,7 @@ const _validateArgs = (args) => {
 }
 
 const _validateNewTeacherArgs = (args) => {
+    const username = isString(args.username)
     const name = isString(args.name)
     const email = isString(args.email)
     const vnuEmail = isString(args.vnuEmail)
@@ -28,7 +32,9 @@ const _validateNewTeacherArgs = (args) => {
     const department = isObjectId(args.department)
     const field = isObjectId(args.field)
 
-    return removeRedundant({address, department, name, email, vnuEmail, phone, website, degree, position, field})
+    if (!username || !name || !email) throw new Error('Missing params')
+
+    return removeRedundant({username, address, department, name, email, vnuEmail, phone, website, degree, position})
 }
 
 exports.getTeachers = async (args) => {
@@ -63,9 +69,31 @@ exports.getTeachers = async (args) => {
 
 exports.addTeacher = async (args) => {
     const validatedTeacher = _validateNewTeacherArgs(args)
-    const teacher = new Teachers(validatedTeacher)
 
-    return await teacher.save()
+    const existUser = await Users.findOne({
+        username: validatedTeacher.username,
+        email: validatedTeacher.email,
+    })
+    if (existUser) throw new Error('Username existed')
+
+    const newUser = new Users({
+        username: validatedTeacher.username,
+        status: 'inactive',
+        type: 'teacher',
+        email: validatedTeacher.email
+    })
+    const user = await newUser.save()
+
+    const newTeacher = new Teachers({...validatedTeacher, user: user._id})
+    const token = signJwt({
+        username: validatedTeacher.username
+    })
+    const teacher = await newTeacher.save()
+    const title = 'u-Faculties registration'
+    const body = `Your change password token: ${token}`
+    const mail = await sendMail({receiver: validatedTeacher.email, title, body: convertMdToHtml(body)})
+
+    return {user, teacher, mail}
 }
 
 exports.editTeacher = async (args) => {
@@ -88,8 +116,8 @@ exports.editTeacher = async (args) => {
 exports.deleteTeacher = async (id) => {
     const ID = isString(id)
     const teacher = await Teachers.findOne({
-        _id: ID
+        _id: id
     }).select('_id')
-    if(!teacher) throw new Error('Teacher not found')
+    if (!teacher) throw new Error('Teacher not found')
     return await teacher.delete()
 }
