@@ -32,8 +32,8 @@ const _validateNewTeacherArgs = (args) => {
     const department = isObjectId(args.department)
     const field = isObjectId(args.field)
 
+    console.log(username, name, email)
     if (!username || !name || !email) throw new Error('Missing params')
-
     return removeRedundant({username, address, department, name, email, vnuEmail, phone, website, degree, position})
 }
 
@@ -71,9 +71,12 @@ exports.addTeacher = async (args) => {
     const validatedTeacher = _validateNewTeacherArgs(args)
 
     const existUser = await Users.findOne({
-        username: validatedTeacher.username,
-        email: validatedTeacher.email,
+        $or: [
+            {username: validatedTeacher.username},
+            {email: validatedTeacher.email}
+        ]
     })
+
     if (existUser) throw new Error('Username existed')
 
     const newUser = new Users({
@@ -102,13 +105,13 @@ exports.editTeacher = async (args) => {
     const teacher = await Teachers.findOne({
         _id: id
     }).select('_id')
-    if(!teacher) throw new Error('Teacher not found')
-    for(let key in teacherDetails) teacher[key] = teacherDetails[key]
+    if (!teacher) throw new Error('Teacher not found')
+    for (let key in teacherDetails) teacher[key] = teacherDetails[key]
     //add teacher id to field
     const field = await Fields.findOne({
         _id: args.field
     }).select('_id')
-    if(!field) throw new Error('Field not found')
+    if (!field) throw new Error('Field not found')
     field.teacher.append(id)
     return await teacher.save()
 }

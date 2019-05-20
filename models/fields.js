@@ -2,8 +2,7 @@ const mongoose = require('mongoose')
 
 const fields = new mongoose.Schema({
     name: String,
-    parent: mongoose.Types.ObjectId,
-    teacher: {types: [mongoose.Types.ObjectId], 'default': []}
+    children: [mongoose.Schema.Types.ObjectId],
 })
 
 module.exports = mongoose.model('fields', fields)

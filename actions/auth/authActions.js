@@ -9,6 +9,7 @@ exports.login = async (username, password) => {
         .select('_id username password type')
 
     if (!user) throw new Error('User not found')
+    console.log(user.password)
     if (!compareHash(password, user.password)) throw new Error('Wrong password')
 
     const token = await Tokens.findOne({user: user._id})
@@ -41,14 +42,13 @@ exports.changePassword = async ({username, password, oldPassword, currentUser}) 
             throw new Error('Wrong password')
         }
     } else {
-        console.log(user, currentUser)
         if (currentUser.username !== username) throw new Error('Wrong token')
-        user.password = password
+        user.password = newPassword
         user.status = 'active'
         await user.save()
     }
 
-    const value = createHash(new Date().getTime())
+    const value = createHash(String(new Date().getTime()))
     const newToken = new Tokens({user: user._id, value})
     await Tokens.deleteMany({user: user._id})
     await newToken.save()

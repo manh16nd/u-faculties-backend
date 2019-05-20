@@ -14,7 +14,6 @@ const teacher = new mongoose.Schema({
         enum: ['master', 'phd', 'doctor']
     },
     position: String,
-    field: mongoose.Types.ObjectId
 })
 
 module.exports = mongoose.model('teachers', teacher)
