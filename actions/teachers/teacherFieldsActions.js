@@ -2,8 +2,13 @@ const {Teachers, Fields, TeacherFields} = require('../../models')
 const {isObjectId} = require('../../helpers/validators/typeValidators')
 
 const _validateFields = (fields, userFields) => {
-    return fields.filter((field) => isObjectId(field) && !userFields.find((item) => item === field))
+    return fields.filter((field) => isObjectId(field) && !userFields.includes(field))
 }
+
+const _validateRemoveFields = (fields, userFields) => {
+    return fields.filter((field) => isObjectId(field) && userFields.includes(field))
+}
+
 
 const _addTeacherToField = async (fieldId, teacher) => {
     const field = await Fields.findOne({
@@ -46,9 +51,11 @@ exports.removeTeacherFromFields = async ({teacherId, fields}) => {
         _id: teacherId
     }).select('_id fields')
     if (!teacher) throw new Error('Teacher not found')
+    const validFields = _validateRemoveFields(fields, teacher.fields)
 
     return {
         teacherId,
-        fields
+        teacher,
+        fields: validFields,
     }
 }
