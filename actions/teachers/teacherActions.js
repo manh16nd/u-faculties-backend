@@ -126,7 +126,13 @@ exports.deleteTeacher = async (id) => {
     return await teacher.delete()
 }
 
+exports.uploadAvatar = async (file, _id) => {
+    const teacher = await Teachers.findOne({
+        _id,
+    })
+    if (!teacher) throw new Error('Teacher not found')
 
-exports.uploadAvatar = async (file) => {
-    return uploadImgur(file.path)
+    const avatar = await uploadImgur(file.path)
+    teacher.avatar = avatar
+    return await teacher.save()
 }

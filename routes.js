@@ -15,7 +15,7 @@ router.get('/teachers', teacher.getTeachers)
 router.post('/teachers', auth.isAdmin, teacher.addTeacher)
 router.patch('/teacher/:id', teacher.editTeacher)
 router.delete('teacher/:id', teacher.deleteTeacher)
-router.post('/teachers/avatar', auth.isAdmin, upload.single('avatar'), teacher.uploadAvatar)
+router.post('/teachers/:id/avatar', auth.isAdmin, upload.single('avatar'), teacher.uploadAvatar)
 
 const department = require('./controllers/departmentController')
 router.get('/departments', department.getDepartments)
