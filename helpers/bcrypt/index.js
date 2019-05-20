@@ -4,15 +4,17 @@ const jwt = require('jsonwebtoken')
 const secretKey = 'SHAZAM!'
 
 exports.hashText = (text) => {
-    return bcrypt.hashSync(text, saltRounds)
+    const value = String(text)
+    return bcrypt.hashSync(value, saltRounds)
 }
 
 exports.compareHash = (a, b) => {
-    return bcrypt.compareSync(a, b)
+    return bcrypt.compareSync(String(a), String(b))
 }
 
 exports.createHash = (text) => {
-    return bcrypt.hashSync(text, saltRounds)
+    const value = String(text)
+    return bcrypt.hashSync(value, saltRounds)
 }
 
 exports.signJwt = (sign) => jwt.sign(sign, secretKey)
