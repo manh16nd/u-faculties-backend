@@ -38,4 +38,10 @@ router.post('/auth/changePassword', auth.parseUser, authController.changePasswor
 router.post('/auth/addUser', auth.isAdmin, authController.createUser)
 router.delete('/auth/deleteUser/:id', authController.deleteUser)
 
+const topics = require('./controllers/topicController')
+router.get('/topics', topics.getTopics)
+router.post('/topics', topics.addTopics)
+router.patch('/topics/:id', topics.editTopics)
+router.delete('/topics/:id', topics.deleteTopic)
+
 module.exports = router

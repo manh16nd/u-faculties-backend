@@ -39,7 +39,7 @@ exports.editTopics = (req, res) => {
         }))
 }
 
-exports.deleteTopics = (req, res) => {
+exports.deleteTopic = (req, res) => {
     const {id} = {...req.params}
     getTopicActions.deleteTopic(id)
         .then(data => res.send({
