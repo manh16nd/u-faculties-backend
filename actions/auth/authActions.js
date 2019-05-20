@@ -41,6 +41,7 @@ exports.changePassword = async ({username, password, oldPassword, currentUser}) 
             throw new Error('Wrong password')
         }
     } else {
+        console.log(user, currentUser)
         if (currentUser.username !== username) throw new Error('Wrong token')
         user.password = password
         user.status = 'active'

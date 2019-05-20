@@ -68,8 +68,10 @@ exports.getTeachers = async (args) => {
 
 exports.addTeacher = async (args) => {
     const validatedTeacher = _validateNewTeacherArgs(args)
+
     const existUser = await Users.findOne({
-        username: validatedTeacher.username
+        username: validatedTeacher.username,
+        email: validatedTeacher.email,
     })
     if (existUser) throw new Error('Username existed')
 

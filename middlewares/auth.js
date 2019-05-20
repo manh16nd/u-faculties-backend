@@ -62,5 +62,4 @@ exports.verifyUser = (req, res, next) => {
         console.log(e.message || e)
         next()
     }
-
 }
