@@ -29,7 +29,7 @@ exports.addTeacherToFields = async ({teacherId, fields}) => {
     const teacher = await Teachers.findOne({
         _id: teacherId
     }).select('_id fields')
-    if (!teacher || teacher.type !== 'teacher') throw new Error('Teacher not found')
+    if (!teacher) throw new Error('Teacher not found')
 
     const validFields = _validateFields(fields, teacher.fields)
 
@@ -45,7 +45,7 @@ exports.removeTeacherFromFields = async ({teacherId, fields}) => {
     const teacher = await Teachers.findOne({
         _id: teacherId
     }).select('_id fields')
-    if (!teacher || teacher.type !== 'teacher') throw new Error('Teacher not found')
+    if (!teacher) throw new Error('Teacher not found')
 
     return {
         teacherId,
