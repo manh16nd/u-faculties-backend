@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('./middlewares/auth')
+const multer = require('multer')
+const upload = multer({dest: 'uploads/'})
 
 const rootController = require('./controllers/rootController')
 
@@ -13,6 +15,7 @@ router.get('/teachers', teacher.getTeachers)
 router.post('/teachers', auth.isAdmin, teacher.addTeacher)
 router.patch('/teacher/:id', teacher.editTeacher)
 router.delete('teacher/:id', teacher.deleteTeacher)
+router.post('/teachers/avatar', auth.isAdmin, upload.single('avatar'), teacher.uploadAvatar)
 
 const department = require('./controllers/departmentController')
 router.get('/departments', department.getDepartments)

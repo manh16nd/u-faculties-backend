@@ -44,3 +44,12 @@ exports.deleteTeacher = (req, res) => {
         .then(teacher => res.send({success: true, teacher}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }
+
+
+exports.uploadAvatar = (req, res) => {
+    const {file} = req
+
+    getTeachersActions.uploadAvatar(file)
+        .then(avatar => res.send({success: true, avatar}))
+        .catch(err => res.send({success: false, message: err.message || err}))
+}

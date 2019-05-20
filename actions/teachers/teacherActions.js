@@ -4,6 +4,7 @@ const {sendMail} = require('../../helpers/mail')
 const {convertMdToHtml} = require('../../helpers/markdown')
 const {signJwt} = require('../../helpers/bcrypt')
 const {isString, removeRedundant, isObjectId} = require('../../helpers/validators/typeValidators')
+const {uploadImgur} = require('../../helpers/imgur')
 
 const _validateArgs = (args) => {
     const {page, limit} = validateQueryArgs(args)
@@ -123,4 +124,9 @@ exports.deleteTeacher = async (id) => {
     }).select('_id')
     if (!teacher) throw new Error('Teacher not found')
     return await teacher.delete()
+}
+
+
+exports.uploadAvatar = async (file) => {
+    return uploadImgur(file.path)
 }
