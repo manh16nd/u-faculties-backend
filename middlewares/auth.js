@@ -55,12 +55,10 @@ exports.verifyUser = (req, res, next) => {
                 next()
             })
             .catch(err => {
-                console.log(err)
-                next()
+                return res.status(403).send({success: 'false', message: 'Permission denied'})
             })
     } catch (e) {
-        console.log(e.message || e)
-        next()
+        return res.status(403).send({success: 'false', message: 'Permission denied'})
     }
 }
 

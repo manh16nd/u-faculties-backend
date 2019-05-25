@@ -27,7 +27,13 @@ exports.login = async (username, password) => {
 }
 
 exports.verify = async (currentUser) => {
-    return currentUser
+    const {username} = currentUser
+
+    const user = await Users.findOne({
+        username,
+    }).select('_id username type')
+
+    return user
 }
 
 exports.changePassword = async ({username, password, oldPassword, currentUser}) => {
