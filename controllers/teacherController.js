@@ -38,7 +38,7 @@ exports.addTeacher = (req, res) => {
 
 exports.editTeacher = (req, res) => {
     const {id, name, email, vnuEmail, phone, address, website, degree, position, department} = {...req.body, ...req.params}
-
+    console.log(id)
     getTeachersActions.editTeacher({id, name, email, vnuEmail, phone, address, website, degree, position, department})
         .then(teacher => res.send({success: true, teacher}))
         .catch(err => res.send({success: false, message: err.message || err}))

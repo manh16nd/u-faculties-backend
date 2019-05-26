@@ -13,6 +13,10 @@ const isObjectId = (source) => {
     return ObjectId.isValid(source) ? source : null
 }
 
+const isArray = (source) => {
+    return _.isArray(source) ? source : null
+}
+
 const removeRedundant = (sourceObject) => {
     return _.pickBy(sourceObject, (value) => isNotNull(value))
 }
@@ -21,3 +25,4 @@ exports.isString = isString
 exports.isNotNull = isNotNull
 exports.removeRedundant = removeRedundant
 exports.isObjectId = isObjectId
+exports.isArray = isArray

@@ -1,9 +1,9 @@
-const { Teachers, Departments, Users } = require('../../models')
+const { Teachers, Departments, Users, Fields } = require('../../models')
 const { validateQueryArgs } = require('../../helpers/validators/getQueryValidators')
 const { sendMail } = require('../../helpers/mail')
 const { convertMdToHtml } = require('../../helpers/markdown')
 const { signJwt } = require('../../helpers/bcrypt')
-const { isString, removeRedundant, isObjectId } = require('../../helpers/validators/typeValidators')
+const { isString, removeRedundant, isObjectId, isArray } = require('../../helpers/validators/typeValidators')
 const { uploadImgur } = require('../../helpers/imgur')
 
 const _validateArgs = (args) => {
@@ -16,8 +16,10 @@ const _validateArgs = (args) => {
     const website = isString(args.website)
     const degree = isString(args.degree)
     const position = isString(args.position)
+    const id = isObjectId(args.id)
+    const fields = isArray(args.fields)
 
-    return removeRedundant({ page, address, limit, name, email, vnuEmail, phone, website, degree, position })
+    return removeRedundant({ id, page, address, limit, name, email, vnuEmail, phone, website, degree, position, fields })
 }
 
 const _validateNewTeacherArgs = (args) => {
@@ -35,7 +37,7 @@ const _validateNewTeacherArgs = (args) => {
 
     console.log(username, name, email)
     // if (!username || !name || !email) throw new Error('Missing params')
-    return removeRedundant({ username, address, department, name, email, vnuEmail, phone, website, degree, position, field})
+    return removeRedundant({ username, address, department, name, email, vnuEmail, phone, website, degree, position, field })
 }
 
 exports.getOneTeacher = async (_id) => {
@@ -49,7 +51,8 @@ exports.getOneTeacher = async (_id) => {
         .populate({
             path: 'department',
             model: Departments,
-            select: '_id name'})
+            select: '_id name'
+        })
         .lean()
 }
 
@@ -60,7 +63,7 @@ exports.getTeacherByUser = async (user) => {
     return await Teachers.findOne({
         user
     })
-    .select('name email vnuEmail phone address department website degree position field avatar')
+        .select('name email vnuEmail phone address department website degree position field avatar')
 }
 
 exports.getTeachers = async (args) => {
@@ -135,11 +138,11 @@ exports.editTeacher = async (args) => {
     for (let key in teacherDetails) teacher[key] = teacherDetails[key]
 
     //add teacher id to field
-    const field = await Fields.findOne({
-        _id: args.field
-    }).select('_id')
-    if (!field) throw new Error('Field not found')
-    field.teacher.append(id)
+    // const field = await Fields.find({
+    //     _id: { $in: args.field }
+    // }).select('_id')
+
+    // field.teacher.append(id)
     return await teacher.save()
 }
 
