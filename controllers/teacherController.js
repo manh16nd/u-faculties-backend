@@ -77,3 +77,18 @@ exports.removeTeacherFromFields = (req, res) => {
         .then(teacher => res.send({success: true, teacher}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }
+
+const teacherTopicActions = require('../actions/teachers/topicTeacherActions')
+exports.addTeacherToTopic = (req, res) => {
+    const {id, topics} = {...req.params, ...req.body}
+    teacherTopicActions.addTeacherToTopics({teacherId: id, topics})
+        .then(teacher => res.send({success: true, teacher}))
+        .catch(err => res.send({success: false, message: err.message || err}))
+}
+
+exports.removeTeacherFromTopics = (req, res) => {
+    const {id, topics} = {...req.params, ...req.body}
+    teacherTopicActions.removeTeacherFromTopics({teacherId: id, topics})
+        .then(teacher => res.send({success: true, teacher}))
+        .catch(err => res.send({success: false, message: err.message || err}))
+}

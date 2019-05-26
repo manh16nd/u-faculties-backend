@@ -1,4 +1,4 @@
-const {Topics} = require('../../models')
+const {Topics, Teachers} = require('../../models')
 const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
 const {isString, removeRedundant} = require('../../helpers/validators/typeValidators')
 
@@ -16,6 +16,22 @@ const _validateTopicArgs = (args) => {
     const name = isString(args.name)
     const description = isString(args.description)
     return removeRedundant({id, name, description})
+}
+
+exports.getOneTopic = async (_id) => {
+    if(!_id) return null
+    return await Topics
+        .findOne({
+            _id
+        })
+        .select()
+        .populate({
+            path: 'teachers',
+            model: Teachers,
+            select: '_id name'
+        })
+        .lean()
+
 }
 
 exports.getFields = async ({limit, page, name}) => {

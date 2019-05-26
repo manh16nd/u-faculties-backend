@@ -34,7 +34,7 @@ const _validateNewTeacherArgs = (args) => {
     const field = isObjectId(args.field)
 
     console.log(username, name, email)
-    if (!username || !name || !email) throw new Error('Missing params')
+    // if (!username || !name || !email) throw new Error('Missing params')
     return removeRedundant({ username, address, department, name, email, vnuEmail, phone, website, degree, position, field})
 }
 
@@ -45,7 +45,7 @@ exports.getOneTeacher = async (_id) => {
         .findOne({
             _id
         })
-        .select()
+        .select('name email vnuEmail phone address department website degree position field avatar')
         .populate({
             path: 'department',
             model: Departments,
@@ -60,7 +60,7 @@ exports.getTeacherByUser = async (user) => {
     return await Teachers.findOne({
         user
     })
-    .select('name email vnuEmail phone address department website degree position avatar')
+    .select('name email vnuEmail phone address department website degree position field avatar')
 }
 
 exports.getTeachers = async (args) => {

@@ -53,7 +53,7 @@ const _removeTeacherFromTopic = async (topicID, teacher) => {
     ])
 }
 
-exports._addTeacherToTopics = async ({teacherId, topics}) => {
+exports.addTeacherToTopics = async ({teacherId, topics}) => {
     const teacher = await Teachers.findOne({
         _id: teacherId
     }).select('_id fields')
