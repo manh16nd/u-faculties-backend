@@ -24,14 +24,13 @@ exports.getOneTopic = async (_id) => {
         .findOne({
             _id
         })
-        .select()
+        .select('name description')
         .populate({
             path: 'teachers',
             model: Teachers,
             select: '_id name'
         })
         .lean()
-
 }
 
 exports.getFields = async ({limit, page, name}) => {

@@ -13,6 +13,19 @@ exports.getTopics = (req, res) => {
         }))
 }
 
+exports.getOneTopic = (req, res) => {
+    const {id} = {...req.params}
+    getTopicActions.getOneTopic(id)
+        .then(data => res.send({
+            success: true,
+            data
+        }))
+        .catch(err => res.send({
+            success: false,
+            message: err.message || err
+        }))
+}
+
 exports.addTopics = (req, res) => {
     const {name, description} = {...req.body}
     getTopicActions.addTopics({name, description})

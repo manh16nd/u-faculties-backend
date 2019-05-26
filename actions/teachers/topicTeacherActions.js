@@ -1,4 +1,4 @@
-const {Teachers, Topics, TeacherTopic} = require('../../models')
+const {Teachers, Topics, TeacherTopics} = require('../../models')
 const {isObjectId} = require('../../helpers/validators/typeValidators')
 
 const _validateTopics = (topics, userFields) => {
@@ -19,7 +19,7 @@ const _addTeacherToTopic = async (topicID, teacher) => {
 
     topic.teachers = [...topic.teachers, teacher._id]
     teacher.topics = [...teacher.topics, topic._id]
-    const teacherTopic = new TeacherTopic({
+    const teacherTopic = new TeacherTopics({
         teacher: teacher._id,
         topic: topic._id,
     })
@@ -41,7 +41,7 @@ const _removeTeacherFromTopic = async (topicID, teacher) => {
 
     topic.teachers = topic.teachers.filter((item) => item.toString() !== teacher._id.toString())
     teacher.topics = teacher.topics.filter((item) => item.toString() !== topic._id.toString())
-    const teacherTopic = await TeacherTopic.findOne({
+    const teacherTopic = await TeacherTopics.findOne({
         teacher: teacher._id,
         topic: topic._id,
     })
@@ -60,8 +60,8 @@ exports.addTeacherToTopics = async ({teacherId, topics}) => {
     if (!teacher) throw new Error('Teacher not found')
 
     const validTopics = _validateTopics(topics, teacher.topics)
-    const work = validTopics.map((field) => {
-        return _addTeacherToTopic(field, teacher)
+    const work = validTopics.map((topic) => {
+        return _addTeacherToTopic(topic, teacher)
     })
 
     return await Promise.all(work)
