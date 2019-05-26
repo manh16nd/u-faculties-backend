@@ -1,4 +1,4 @@
-const {Fields} = require('../../models')
+const {Fields, Teachers} = require('../../models')
 const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
 const {isString, isObjectId, removeRedundant} = require('../../helpers/validators/typeValidators')
 
@@ -30,6 +30,11 @@ exports.getFields = async ({limit, page, name}) => {
         .find(query)
         .skip(skip)
         .limit(validatedArgs.limit)
+        .populate({
+            path: 'teachers',
+            model: Teachers,
+            select: '_id name'
+        })
         .lean()
     const totalQuery = Fields.countDocuments({})
     const [fields, total] = await Promise.all([fieldsQuery, totalQuery])
@@ -39,6 +44,26 @@ exports.getFields = async ({limit, page, name}) => {
         fields,
         total,
     }
+}
+
+exports.getOneField = async (_id) => {
+    if(!_id) return null
+    return await Fields
+        .findOne({
+            _id
+        })
+        .select()
+        .populate({
+            path: 'teachers',
+            model: Teachers,
+            select: '_id name'
+        })
+        .populate({
+            path: 'parent',
+            model: Fields,
+            select: '_id name'
+        })
+        .lean()
 }
 
 exports.addField = async (args) => {

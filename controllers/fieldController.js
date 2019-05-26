@@ -10,6 +10,19 @@ exports.getFields = (req, res) => {
         .catch(err => res.send({success: false, message: err.message || err}))
 }
 
+exports.getOneField = (req, res) => {
+    const {id} = {...req.params}
+    getFieldsActions.getOneField(id)
+        .then(data => res.send({
+            success: true,
+            data
+        }))
+        .catch(err => res.send({
+            success: false,
+            message: err.message || err
+        }))
+}
+
 exports.addFields = (req, res) => {
     const {name, parent} = {...req.body}
     getFieldsActions.addField({name, parent})
