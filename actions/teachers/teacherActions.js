@@ -126,7 +126,7 @@ exports.addTeacher = async (args) => {
 }
 
 exports.editTeacher = async (args) => {
-    const validatedArgs = _validateNewTeacherArgs(args)
+    const validatedArgs = _validateArgs(args)
     const { id, ...teacherDetails } = validatedArgs
     const teacher = await Teachers.findOne({
         _id: id
