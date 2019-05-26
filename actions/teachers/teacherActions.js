@@ -35,16 +35,21 @@ const _validateNewTeacherArgs = (args) => {
 
     console.log(username, name, email)
     if (!username || !name || !email) throw new Error('Missing params')
-    return removeRedundant({ username, address, department, name, email, vnuEmail, phone, website, degree, position })
+    return removeRedundant({ username, address, department, name, email, vnuEmail, phone, website, degree, position, field})
 }
 
 exports.getOneTeacher = async (_id) => {
     if (!_id) return null
-
+    console.log("id: " + _id)
     return await Teachers
         .findOne({
             _id
         })
+        .select()
+        .populate({
+            path: 'department',
+            model: Departments,
+            select: '_id name'})
         .lean()
 }
 
@@ -128,6 +133,7 @@ exports.editTeacher = async (args) => {
     }).select('_id')
     if (!teacher) throw new Error('Teacher not found')
     for (let key in teacherDetails) teacher[key] = teacherDetails[key]
+
     //add teacher id to field
     const field = await Fields.findOne({
         _id: args.field
@@ -140,7 +146,7 @@ exports.editTeacher = async (args) => {
 exports.deleteTeacher = async (id) => {
     const ID = isString(id)
     const teacher = await Teachers.findOne({
-        _id: id
+        _id: ID
     }).select('_id')
     if (!teacher) throw new Error('Teacher not found')
     return await teacher.delete()

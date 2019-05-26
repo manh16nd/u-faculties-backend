@@ -9,6 +9,13 @@ exports.getTeachers = (req, res) => {
         .catch(err => res.send({success: false, message: err.message || err}))
 }
 
+exports.getOneTeacher = (req, res) => {
+    const {id} = {...req.params}
+    getTeachersActions.getOneTeacher(id)
+        .then(data => res.send({success: true, data}))
+        .catch(err => res.send({success: false, message: err.message || err}))
+}
+
 exports.addTeacher = (req, res) => {
     const {name, username, email, vnuEmail, phone, address, website, degree, position, department, field} = {...req.body}
 
