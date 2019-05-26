@@ -1,5 +1,5 @@
 const { verifyHeaders } = require('../helpers/bcrypt')
-const { Users, Tokens } = require('../models')
+const { Users, Tokens, Teachers } = require('../models')
 
 const getUserInfo = (data) => new Promise((resolve, reject) => {
     Users.findOne({
@@ -18,6 +18,14 @@ const getUserInfo = (data) => new Promise((resolve, reject) => {
                 })
                 .catch(err => reject('Invalid'))
         })
+        .catch(err => reject(err.message || err))
+})
+
+const getTeacherByUser = (user) => new Promise((resolve, reject) => {
+    return Teachers.findOne({
+        user,
+    })
+        .then(teacher => resolve(teacher))
         .catch(err => reject(err.message || err))
 })
 
@@ -49,14 +57,20 @@ exports.isTeacher = (req, res, next) => {
     try {
         const user = verifyHeaders(authorization)
         getUserInfo(user)
-            .then((foundUser) => {
+            .then(async (foundUser) => {
                 const { type } = user
                 if (type === 'admin' || type === 'staff') {
                     req.body.currentUser = foundUser
                     return next()
                 }
                 if (type === 'teacher') {
-                    if (id && id !== foundUser._id) return res.status(403).send({ success: 'false', message: 'Permission denied' })
+                    if (id) {
+                        const teacher = await getTeacherByUser(foundUser._id)
+                        
+                        if (teacher._id.toString() !== id) return res.status(403).send({ success: 'false', message: 'Permission denied' })
+                        req.body.currentUser = foundUser
+                        return next()
+                    }
                     req.body.currentUser = foundUser
                     return next()
                 }
