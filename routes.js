@@ -16,7 +16,7 @@ router.get('/teachers/:id', teacher.getOneTeacher)
 router.post('/teachers', auth.isAdmin, teacher.addTeacher)
 router.patch('/teachers/:id', teacher.editTeacher)
 router.delete('teachers/:id', teacher.deleteTeacher)
-router.post('/teachers/:id/avatar', auth.isAdmin, upload.single('avatar'), teacher.uploadAvatar)
+router.post('/teachers/:id/avatar', auth.isTeacher, upload.single('avatar'), teacher.uploadAvatar)
 router.post('/teachers/:id/fields', auth.isAdmin, teacher.addTeacherToFields)
 router.delete('/teachers/:id/fields', auth.isAdmin, teacher.removeTeacherFromFields)
 
