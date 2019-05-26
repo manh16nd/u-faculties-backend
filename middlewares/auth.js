@@ -1,5 +1,5 @@
-const {verifyHeaders} = require('../helpers/bcrypt')
-const {Users, Tokens} = require('../models')
+const { verifyHeaders } = require('../helpers/bcrypt')
+const { Users, Tokens } = require('../models')
 
 const getUserInfo = (data) => new Promise((resolve, reject) => {
     Users.findOne({
@@ -14,7 +14,7 @@ const getUserInfo = (data) => new Promise((resolve, reject) => {
             })
                 .then(token => {
                     if (!token || token.value !== data.value) return reject('invalid')
-                    return resolve(data)
+                    return resolve(user)
                 })
                 .catch(err => reject('Invalid'))
         })
@@ -22,28 +22,57 @@ const getUserInfo = (data) => new Promise((resolve, reject) => {
 })
 
 exports.isAdmin = (req, res, next) => {
-    const {authorization} = {...req.headers}
-    if (!authorization) return res.status(403).send({success: 'false', message: 'Permission denied'})
+    const { authorization } = { ...req.headers }
+    if (!authorization) return res.status(403).send({ success: 'false', message: 'Permission denied' })
     try {
         const user = verifyHeaders(authorization)
         getUserInfo(user)
             .then(success => {
-                if (user.type !== 'admin') return res.status(403).send({success: 'false', message: 'Permission denied'})
+                if (user.type !== 'admin') return res.status(403).send({ success: 'false', message: 'Permission denied' })
 
                 req.body.currentUser = user
                 next()
             })
             .catch(err => {
                 console.log(err)
-                return res.status(403).send({success: 'false', message: 'Permission denied'})
+                return res.status(403).send({ success: 'false', message: 'Permission denied' })
             })
     } catch (e) {
-        return res.status(403).send({success: 'false', message: 'Permission denied'})
+        return res.status(403).send({ success: 'false', message: 'Permission denied' })
+    }
+}
+
+exports.isTeacher = (req, res, next) => {
+    const { authorization, id } = { ...req.headers, ...req.params }
+    if (!authorization) return res.status(403).send({ success: 'false', message: 'Permission denied' })
+
+    try {
+        const user = verifyHeaders(authorization)
+        getUserInfo(user)
+            .then((foundUser) => {
+                const { type } = user
+                if (type === 'admin' || type === 'staff') {
+                    req.body.currentUser = foundUser
+                    return next()
+                }
+                if (type === 'teacher') {
+                    if (id && id !== foundUser._id) return res.status(403).send({ success: 'false', message: 'Permission denied' })
+                    req.body.currentUser = foundUser
+                    return next()
+                }
+                return res.status(403).send({ success: 'false', message: 'Permission denied' })
+            })
+            .catch(err => {
+                console.log(err)
+                return res.status(403).send({ success: 'false', message: 'Permission denied' })
+            })
+    } catch (e) {
+        return res.status(403)
     }
 }
 
 exports.verifyUser = (req, res, next) => {
-    const {authorization} = {...req.headers}
+    const { authorization } = { ...req.headers }
     req.body.currentUser = {}
     if (!authorization) return next()
     try {
@@ -55,15 +84,15 @@ exports.verifyUser = (req, res, next) => {
                 next()
             })
             .catch(err => {
-                return res.status(403).send({success: 'false', message: 'Permission denied'})
+                return res.status(403).send({ success: 'false', message: 'Permission denied' })
             })
     } catch (e) {
-        return res.status(403).send({success: 'false', message: 'Permission denied'})
+        return res.status(403).send({ success: 'false', message: 'Permission denied' })
     }
 }
 
 exports.parseUser = (req, res, next) => {
-    const {authorization} = {...req.headers}
+    const { authorization } = { ...req.headers }
     req.body.currentUser = {}
     if (!authorization) return next()
     try {

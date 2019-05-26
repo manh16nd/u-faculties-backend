@@ -1,13 +1,13 @@
-const {Teachers, Departments, Users} = require('../../models')
-const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
-const {sendMail} = require('../../helpers/mail')
-const {convertMdToHtml} = require('../../helpers/markdown')
-const {signJwt} = require('../../helpers/bcrypt')
-const {isString, removeRedundant, isObjectId} = require('../../helpers/validators/typeValidators')
-const {uploadImgur} = require('../../helpers/imgur')
+const { Teachers, Departments, Users } = require('../../models')
+const { validateQueryArgs } = require('../../helpers/validators/getQueryValidators')
+const { sendMail } = require('../../helpers/mail')
+const { convertMdToHtml } = require('../../helpers/markdown')
+const { signJwt } = require('../../helpers/bcrypt')
+const { isString, removeRedundant, isObjectId } = require('../../helpers/validators/typeValidators')
+const { uploadImgur } = require('../../helpers/imgur')
 
 const _validateArgs = (args) => {
-    const {page, limit} = validateQueryArgs(args)
+    const { page, limit } = validateQueryArgs(args)
     const name = isString(args.name)
     const email = isString(args.email)
     const vnuEmail = isString(args.vnuEmail)
@@ -17,7 +17,7 @@ const _validateArgs = (args) => {
     const degree = isString(args.degree)
     const position = isString(args.position)
 
-    return removeRedundant({page, address, limit, name, email, vnuEmail, phone, website, degree, position})
+    return removeRedundant({ page, address, limit, name, email, vnuEmail, phone, website, degree, position })
 }
 
 const _validateNewTeacherArgs = (args) => {
@@ -35,16 +35,36 @@ const _validateNewTeacherArgs = (args) => {
 
     console.log(username, name, email)
     if (!username || !name || !email) throw new Error('Missing params')
-    return removeRedundant({username, address, department, name, email, vnuEmail, phone, website, degree, position})
+    return removeRedundant({ username, address, department, name, email, vnuEmail, phone, website, degree, position })
+}
+
+exports.getOneTeacher = async (_id) => {
+    if (!_id) return null
+
+    return await Teachers
+        .findOne({
+            _id
+        })
+        .lean()
+}
+
+exports.getTeacherByUser = async (user) => {
+    console.log(user)
+    if (!user) return null
+
+    return await Teachers.findOne({
+        user
+    })
+    .select('name email vnuEmail phone address department website degree position avatar')
 }
 
 exports.getTeachers = async (args) => {
     const validatedArgs = _validateArgs(args)
-    const {limit, page, ...query} = validatedArgs
+    const { limit, page, ...query } = validatedArgs
 
     const getQuery = Object.keys(query).reduce((q, key) => ({
         ...q,
-        [key]: {$regex: new RegExp(`${query[key].toLowerCase()}`, 'i')}
+        [key]: { $regex: new RegExp(`${query[key].toLowerCase()}`, 'i') }
     }), {})
     const skip = (page - 1) * limit
 
@@ -73,8 +93,8 @@ exports.addTeacher = async (args) => {
 
     const existUser = await Users.findOne({
         $or: [
-            {username: validatedTeacher.username},
-            {email: validatedTeacher.email}
+            { username: validatedTeacher.username },
+            { email: validatedTeacher.email }
         ]
     })
 
@@ -88,21 +108,21 @@ exports.addTeacher = async (args) => {
     })
     const user = await newUser.save()
 
-    const newTeacher = new Teachers({...validatedTeacher, user: user._id})
+    const newTeacher = new Teachers({ ...validatedTeacher, user: user._id })
     const token = signJwt({
         username: validatedTeacher.username
     })
     const teacher = await newTeacher.save()
     const title = 'u-Faculties registration'
     const body = `Your change password token: ${token}`
-    const mail = await sendMail({receiver: validatedTeacher.email, title, body: convertMdToHtml(body)})
+    const mail = await sendMail({ receiver: validatedTeacher.email, title, body: convertMdToHtml(body) })
 
-    return {user, teacher, mail}
+    return { user, teacher, mail }
 }
 
 exports.editTeacher = async (args) => {
     const validatedArgs = _validateNewTeacherArgs(args)
-    const {id, ...teacherDetails} = validatedArgs
+    const { id, ...teacherDetails } = validatedArgs
     const teacher = await Teachers.findOne({
         _id: id
     }).select('_id')
