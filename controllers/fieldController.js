@@ -50,5 +50,21 @@ exports.deleteField = (req, res) => {
             success: true,
             field
         }))
-        .catch(err => res.send({success: false, message: err.message || err}))
+        .catch(err => res.send({
+            success: false,
+            message: err.message || err
+        }))
+}
+
+exports.getChildren = (req, res) => {
+    const {id} = {...req.params}
+    getFieldsActions.getChildren(id)
+        .then(field => res.send({
+            success: true,
+            field
+        }))
+        .catch(err => res.send({
+            success: false,
+            message: err.message || err
+        }))
 }

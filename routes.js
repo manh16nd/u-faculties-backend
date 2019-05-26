@@ -34,6 +34,7 @@ router.get('/fields/:id', fields.getOneField)
 router.post('/fields', fields.addFields)
 router.patch('/fields/:id', fields.editFields)
 router.delete('/fields/:id', fields.deleteField)
+router.get('/fields/:id/children', fields.getChildren)
 
 const authController = require('./controllers/authController')
 router.post('/auth/login', authController.login)

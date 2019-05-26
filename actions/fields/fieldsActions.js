@@ -1,9 +1,9 @@
-const { Fields, Teachers } = require('../../models')
-const { validateQueryArgs } = require('../../helpers/validators/getQueryValidators')
-const { isString, isObjectId, removeRedundant } = require('../../helpers/validators/typeValidators')
+const {Fields, Teachers} = require('../../models')
+const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
+const {isString, isObjectId, removeRedundant} = require('../../helpers/validators/typeValidators')
 
-const _validateArgs = ({ limit, page, name }) => {
-    const paging = validateQueryArgs({ limit, page })
+const _validateArgs = ({limit, page, name}) => {
+    const paging = validateQueryArgs({limit, page})
     const parsedName = isString(name)
 
     return {
@@ -16,13 +16,13 @@ const _validateFieldArgs = (args) => {
     const name = isString(args.name)
     const parent = isObjectId(args.parent)
     const id = isString(args.id)
-    return removeRedundant({ id, name, parent })
+    return removeRedundant({id, name, parent})
 }
 
-exports.getFields = async ({ limit, page, name }) => {
-    const validatedArgs = _validateArgs({ limit, page, name })
+exports.getFields = async ({limit, page, name}) => {
+    const validatedArgs = _validateArgs({limit, page, name})
     const query = {
-        name: { $regex: new RegExp(`${validatedArgs.name.toLowerCase()}`, 'i') },
+        name: {$regex: new RegExp(`${validatedArgs.name.toLowerCase()}`, 'i')},
         parent: null,
     }
     const skip = validatedArgs.limit * (validatedArgs.page - 1)
@@ -75,7 +75,7 @@ exports.addField = async (args) => {
 
 exports.editField = async (args) => {
     const validatedArgs = _validateFieldArgs(args)
-    const { id, ...fieldDetails } = validatedArgs
+    const {id, ...fieldDetails} = validatedArgs
     const field = await Fields.findOne({
         _id: id
     }).select('_id')
@@ -92,4 +92,16 @@ exports.deleteField = async (id) => {
     }).select('_id')
     if (!field) throw new Error('Field not found')
     return await field.delete()
+}
+
+exports.getChildren = async (id) => {
+    if(!id) return null
+    const ID = isObjectId(id)
+    console.log(ID)
+    return await Fields
+        .find({
+            parent: ID
+        })
+        .select('_id name')
+        .lean()
 }
