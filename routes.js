@@ -20,7 +20,7 @@ router.delete('/teacher/:id/fields', auth.isAdmin, teacher.removeTeacherFromFiel
 router.delete('/teacher/:id/topics', auth.isAdmin, teacher.removeTeacherFromTopics)
 router.post('/teachers/:id/avatar', auth.isTeacher, upload.single('avatar'), teacher.uploadAvatar)
 router.post('/teachers/:id/fields', auth.isAdmin, teacher.addTeacherToFields)
-router.post('/teachers/:id/topics', auth.isAdmin, teacher.addTeacherToTopic)
+router.post('/teachers/:id/topics', auth.isTeacher, teacher.addTeacherToTopic)
 
 const department = require('./controllers/departmentController')
 router.get('/departments', department.getDepartments)
