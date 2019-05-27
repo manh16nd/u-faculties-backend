@@ -19,6 +19,11 @@ const teacher = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'fields',
         default: []
+    }],
+    topics: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'topics',
+        default: []
     }]
 })
 
