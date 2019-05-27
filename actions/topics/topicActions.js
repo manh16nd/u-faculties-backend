@@ -46,11 +46,11 @@ exports.getFields = async ({limit, page, name}) => {
         .limit(validatedArgs.limit)
         .lean()
     const totalQuery = Topics.countDocuments({})
-    const [fields, total] = await Promise.all([topicsQuery, totalQuery])
+    const [topics, total] = await Promise.all([topicsQuery, totalQuery])
 
     return {
         page: validatedArgs.page,
-        fields,
+        topics,
         total,
     }
 }

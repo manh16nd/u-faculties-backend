@@ -66,7 +66,7 @@ exports.getTeacherTopics = async ({ teacherId }) => {
         })
 
     if (!teacher) throw new Error('Teacher not found')
-    return teacher.topics
+    return { topics: teacher.topics, total: teacher.topics.length }
 }
 
 exports.addTeacherToTopics = async ({ teacherId, topics }) => {
