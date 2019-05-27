@@ -1,5 +1,5 @@
-const {Teachers, Topics, TeacherTopics} = require('../../models')
-const {isObjectId} = require('../../helpers/validators/typeValidators')
+const { Teachers, Topics, TeacherTopics } = require('../../models')
+const { isObjectId } = require('../../helpers/validators/typeValidators')
 
 const _validateTopics = (topics, userTopics) => {
     return topics.filter((topic) => isObjectId(topic) && !userTopics.find(item => {
@@ -55,7 +55,21 @@ const _removeTeacherFromTopic = async (topicID, teacher) => {
     ])
 }
 
-exports.addTeacherToTopics = async ({teacherId, topics}) => {
+exports.getTeacherTopics = async ({ teacherId }) => {
+    const teacher = await Teachers.findOne({
+        _id: teacherId
+    })
+        .select('topics')
+        .populate({
+            path: 'topics',
+            select: 'name descriptions'
+        })
+
+    if (!teacher) throw new Error('Teacher not found')
+    return teacher.topics
+}
+
+exports.addTeacherToTopics = async ({ teacherId, topics }) => {
     const teacher = await Teachers.findOne({
         _id: teacherId
     }).select('_id topics')
@@ -69,7 +83,7 @@ exports.addTeacherToTopics = async ({teacherId, topics}) => {
     return await Promise.all(work)
 }
 
-exports.removeTeacherFromTopics = async ({teacherId, topics}) => {
+exports.removeTeacherFromTopics = async ({ teacherId, topics }) => {
     const teacher = await Teachers.findOne({
         _id: teacherId
     }).select('_id topics')

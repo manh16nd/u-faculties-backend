@@ -36,7 +36,7 @@ exports.isAdmin = (req, res, next) => {
         const user = verifyHeaders(authorization)
         getUserInfo(user)
             .then(success => {
-                if (user.type !== 'admin') return res.status(403).send({ success: 'false', message: 'Permission denied' })
+                if (user.type !== 'admin' || user.type !== 'staff') return res.status(403).send({ success: 'false', message: 'Permission denied' })
 
                 req.body.currentUser = user
                 next()
@@ -66,7 +66,7 @@ exports.isTeacher = (req, res, next) => {
                 if (type === 'teacher') {
                     if (id) {
                         const teacher = await getTeacherByUser(foundUser._id)
-                        
+
                         if (teacher._id.toString() !== id) return res.status(403).send({ success: 'false', message: 'Permission denied' })
                         req.body.currentUser = foundUser
                         return next()
