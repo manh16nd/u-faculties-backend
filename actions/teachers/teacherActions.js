@@ -5,6 +5,7 @@ const { convertMdToHtml } = require('../../helpers/markdown')
 const { signJwt } = require('../../helpers/bcrypt')
 const { isString, removeRedundant, isObjectId, isArray } = require('../../helpers/validators/typeValidators')
 const { uploadImgur } = require('../../helpers/imgur')
+const { parseExcel } = require('../../helpers/excel')
 
 const _validateArgs = (args) => {
     const { page, limit } = validateQueryArgs(args)
@@ -164,4 +165,16 @@ exports.uploadAvatar = async (file, _id) => {
     const avatar = await uploadImgur(file.path)
     teacher.avatar = avatar
     return await teacher.save()
+}
+
+exports.importExcel = async (file) => {
+    const data = await parseExcel(file)
+    data.forEach(function (x) {
+        this.addTeacher({
+            name: x["Họ và Tên"],
+            username: x["Tên đăng nhập"],
+            email: x["VNU email"],
+            vnuEmail: x["VNU email"],
+        })
+    })
 }

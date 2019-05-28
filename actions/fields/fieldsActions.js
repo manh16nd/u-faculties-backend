@@ -97,7 +97,6 @@ exports.deleteField = async (id) => {
 exports.getChildren = async (id) => {
     if(!id) return null
     const ID = isObjectId(id)
-    console.log(ID)
     return await Fields
         .find({
             parent: ID

@@ -100,4 +100,10 @@ exports.removeTeacherFromTopics = (req, res) => {
         .catch(err => res.send({ success: false, message: err.message || err }))
 }
 
+exports.importExcel = (req, res) => {
+    const {file} = {...req}
+    getTeachersActions.importExcel(file)
+        .then(teacher => res.send({ success: true, teacher }))
+        .catch(err => res.send({ success: false, message: err.message || err }))
+}
 
