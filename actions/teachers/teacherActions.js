@@ -171,13 +171,12 @@ exports.uploadAvatar = async (file, _id) => {
 
 exports.importExcel = async (file) => {
     const data = await parseExcel(file)
-    
     data.forEach(function (x) {
         addTeacher({
-            name: x["Họ và Tên"],
-            username: x["Tên đăng nhập"],
-            email: x["VNU email"],
-            vnuEmail: x["VNU email"],
+            name: x['Họ và tên'],
+            username: x['Tên đăng nhập'],
+            email: x['VNU email'],
+            vnuEmail: x['VNU email'],
         })
     })
 }

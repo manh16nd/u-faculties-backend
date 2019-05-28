@@ -2,7 +2,15 @@ const express = require('express')
 const router = express.Router()
 const auth = require('./middlewares/auth')
 const multer = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname)
+    }
+})
+const upload = multer({ storage:storage })
 
 const rootController = require('./controllers/rootController')
 
@@ -13,7 +21,7 @@ router.get('/errorExample', rootController.fakeError)
 const teacher = require('./controllers/teacherController')
 router.get('/teachers', teacher.getTeachers)
 router.get('/teachers/:id', teacher.getOneTeacher)
-router.post('/teachers/excel',  upload.single('excel'), teacher.importExcel)
+router.post('/teachers/excel', upload.single("excel"), teacher.importExcel)
 router.post('/teachers', auth.isAdmin, teacher.addTeacher)
 router.patch('/teachers/:id', teacher.editTeacher)
 router.delete('teachers/:id', teacher.deleteTeacher)
