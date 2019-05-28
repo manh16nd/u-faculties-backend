@@ -3,6 +3,7 @@ const XLSX = require('xlsx');
 exports.parseExcel = async (file) => {
     const workbook = XLSX.readFile(file.path)
     const sheet_name_list = workbook.SheetNames
+    const result = []
     sheet_name_list.forEach(function (y) {
         var worksheet = workbook.Sheets[y]
         var headers = {}
@@ -33,6 +34,9 @@ exports.parseExcel = async (file) => {
         //drop those first two rows which are empty
         data.shift()
         data.shift()
+        result.push(data)
         return data
     })
+
+    return result
 }

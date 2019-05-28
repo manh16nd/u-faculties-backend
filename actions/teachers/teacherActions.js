@@ -97,7 +97,7 @@ exports.getTeachers = async (args) => {
     }
 }
 
-exports.addTeacher = async (args) => {
+const addTeacher  = async (args) => {
     const validatedTeacher = _validateNewTeacherArgs(args)
 
     const existUser = await Users.findOne({
@@ -128,6 +128,8 @@ exports.addTeacher = async (args) => {
 
     return { user, teacher, mail }
 }
+
+exports.addTeacher = addTeacher
 
 exports.editTeacher = async (args) => {
     const validatedArgs = _validateArgs(args)
@@ -169,8 +171,9 @@ exports.uploadAvatar = async (file, _id) => {
 
 exports.importExcel = async (file) => {
     const data = await parseExcel(file)
+    
     data.forEach(function (x) {
-        this.addTeacher({
+        addTeacher({
             name: x["Họ và Tên"],
             username: x["Tên đăng nhập"],
             email: x["VNU email"],
