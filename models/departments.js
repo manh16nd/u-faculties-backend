@@ -6,8 +6,9 @@ const departments = new mongoose.Schema({
     phone: String,
     website: String,
     type: {
-        type: String,
-        enum: [''],
+        enum: ['bo mon'],
+        default: 'bo mon',
+        type: String
     }
 })
 
