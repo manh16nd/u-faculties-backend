@@ -75,3 +75,7 @@ exports.deleteDepartment = async (id) => {
     if(!department) throw new Error('Department not found')
     return await department.delete()
 }
+
+exports.getDepartmentTypes = async () => {
+    return Departments.schema.path('type').enumValues
+}

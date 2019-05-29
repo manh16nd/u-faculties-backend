@@ -30,3 +30,9 @@ exports.deleteDepartment = (req, res) => {
         .then(department => res.send({success: true, department}))
         .catch(err => res.send({success: false, message: err.message || err}))
 }
+
+exports.getDepartmentTypes = (req, res) => {
+    getDepartmentsActions.getDepartmentTypes()
+        .then(department => res.send({success: true, department}))
+        .catch(err => res.send({success: false, message: err.message || err}))
+}

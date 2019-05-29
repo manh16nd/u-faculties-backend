@@ -37,6 +37,7 @@ router.get('/departments', department.getDepartments)
 router.post('/departments', department.addDepartment)
 router.patch('/departments/:id', department.editDepartment)
 router.delete('/departments/:id', department.deleteDepartment)
+router.get('/departments/types', department.getDepartmentTypes)
 
 const fields = require('./controllers/fieldController')
 router.get('/fields', fields.getFields)
