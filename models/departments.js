@@ -5,7 +5,11 @@ const departments = new mongoose.Schema({
     type: String,
     address: String,
     phone: String,
-    website: String
+    website: String,
+    type: {
+        type: String,
+        enum: [''],
+    }
 })
 
 module.exports = mongoose.model('departments', departments)
