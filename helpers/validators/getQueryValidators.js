@@ -1,7 +1,7 @@
 exports.validateQueryArgs = ({page, limit}) => {
     const defaultArgs = {
         page: 1,
-        limit: 10,
+        limit: 0,
     }
 
     const parsedPage = isNaN(+page) ? defaultArgs.page : +page

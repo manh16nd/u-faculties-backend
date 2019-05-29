@@ -1,8 +1,8 @@
 const getDepartmentsActions = require('../actions/departments/departmentActions')
 
 exports.getDepartments = (req, res) => {
-    const {limit, page, name} = {...req.query, ...req.body}
-    getDepartmentsActions.getDepartments({limit, page, name})
+    const {limit, page, name, type} = {...req.query, ...req.body}
+    getDepartmentsActions.getDepartments({limit, page, name, type})
         .then(data => res.send({
             success: true,
             data,

@@ -1,14 +1,16 @@
-const {Departments} = require('../../models')
-const {validateQueryArgs} = require('../../helpers/validators/getQueryValidators')
-const {isString, removeRedundant} = require('../../helpers/validators/typeValidators')
+const { Departments } = require('../../models')
+const { validateQueryArgs } = require('../../helpers/validators/getQueryValidators')
+const { isString, removeRedundant } = require('../../helpers/validators/typeValidators')
 
-const _validateArgs = ({limit, page, name}) => {
-    const paging = validateQueryArgs({limit, page})
+const _validateArgs = ({ limit, page, name, type }) => {
+    const paging = validateQueryArgs({ limit, page })
     const parsedName = isString(name)
+    const parsedType = isString(type)
 
     return {
         ...paging,
         name: parsedName || '',
+        type: parsedType || '',
     }
 }
 
@@ -20,14 +22,17 @@ const _validateDepartmentArgs = (args) => {
     const website = isString(args.website)
     const id = isString(args.id)
 
-    return removeRedundant({id, name, type, address, phone, website})
+    return removeRedundant({ id, name, type, address, phone, website })
 }
 
-exports.getDepartments = async ({limit, page, name}) => {
-    const validatedArgs = _validateArgs({limit, page, name})
+exports.getDepartments = async ({ limit, page, name, type }) => {
+    const validatedArgs = _validateArgs({ limit, page, name, type })
     const query = {
         name: {
             $regex: new RegExp(`${validatedArgs.name.toLowerCase()}`, 'i')
+        },
+        type: {
+            $regex: new RegExp(`${validatedArgs.type.toLowerCase()}`, 'i')
         }
     }
     const skip = validatedArgs.limit * (validatedArgs.page - 1)
@@ -57,7 +62,7 @@ exports.addDepartment = async (args) => {
 
 exports.editDepartment = async (args) => {
     const validatedArgs = _validateDepartmentArgs(args)
-    const {id, ...departmentDetails} = validatedArgs
+    const { id, ...departmentDetails } = validatedArgs
     const department = await Departments.findOne({
         _id: id
     }).select('_id')
@@ -72,7 +77,7 @@ exports.deleteDepartment = async (id) => {
     const department = await Departments.findOne({
         _id: ID
     }).select('_id')
-    if(!department) throw new Error('Department not found')
+    if (!department) throw new Error('Department not found')
     return await department.delete()
 }
 
