@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const types = ['bo mon']
+const types = ['Bộ môn']
 
 const departments = new mongoose.Schema({
     name: String,
@@ -9,7 +9,7 @@ const departments = new mongoose.Schema({
     website: String,
     type: {
         enum: types,
-        default: 'bo mon',
+        default: 'Bộ môn',
         type: String
     }
 })
