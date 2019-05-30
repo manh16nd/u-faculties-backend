@@ -1,5 +1,5 @@
-const {Teachers, Fields, TeacherFields} = require('../../models')
-const {isObjectId} = require('../../helpers/validators/typeValidators')
+const { Teachers, Fields, TeacherFields } = require('../../models')
+const { isObjectId } = require('../../helpers/validators/typeValidators')
 
 const _validateFields = (fields, userFields) => {
     return fields.filter((field) => isObjectId(field) && !userFields.includes(field))
@@ -53,7 +53,7 @@ const _removeTeacherFromField = async (fieldId, teacher) => {
     ])
 }
 
-exports.addTeacherToFields = async ({teacherId, fields}) => {
+exports.addTeacherToFields = async ({ teacherId, fields }) => {
     const teacher = await Teachers.findOne({
         _id: teacherId
     }).select('_id fields')
@@ -67,7 +67,7 @@ exports.addTeacherToFields = async ({teacherId, fields}) => {
     return await Promise.all(work)
 }
 
-exports.removeTeacherFromFields = async ({teacherId, fields}) => {
+exports.removeTeacherFromFields = async ({ teacherId, fields }) => {
     const teacher = await Teachers.findOne({
         _id: teacherId
     }).select('_id fields')

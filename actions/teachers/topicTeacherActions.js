@@ -62,7 +62,7 @@ exports.getTeacherTopics = async ({ teacherId }) => {
         .select('topics')
         .populate({
             path: 'topics',
-            select: 'name descriptions'
+            select: 'name description'
         })
 
     if (!teacher) throw new Error('Teacher not found')

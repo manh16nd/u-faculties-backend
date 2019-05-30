@@ -40,7 +40,7 @@ exports.editTeacher = (req, res) => {
     const { id, name, email, vnuEmail, phone, address, website, degree, position, department } = { ...req.body, ...req.params }
     console.log(id)
     getTeachersActions.editTeacher({ id, name, email, vnuEmail, phone, address, website, degree, position, department })
-        .then(teacher => res.send({ success: true, teacher }))
+        .then(data => res.send({ success: true, data }))
         .catch(err => res.send({ success: false, message: err.message || err }))
 }
 
@@ -48,7 +48,7 @@ exports.deleteTeacher = (req, res) => {
     const { id } = { ...req.params }
 
     getTeachersActions.editTeacher({ id })
-        .then(teacher => res.send({ success: true, teacher }))
+        .then(data => res.send({ success: true, data }))
         .catch(err => res.send({ success: false, message: err.message || err }))
 }
 
@@ -56,7 +56,7 @@ exports.uploadAvatar = (req, res) => {
     const { file, id } = { ...req, ...req.params }
 
     getTeachersActions.uploadAvatar(file, id)
-        .then(avatar => res.send({ success: true, avatar }))
+        .then(data => res.send({ success: true, data }))
         .catch(err => res.send({ success: false, message: err.message || err }))
 }
 
@@ -66,15 +66,15 @@ exports.addTeacherToFields = (req, res) => {
     const { id, fields } = { ...req.params, ...req.body }
 
     teacherFieldsActions.addTeacherToFields({ teacherId: id, fields })
-        .then(teacher => res.send({ success: true, teacher }))
+        .then(data => res.send({ success: true, data }))
         .catch(err => res.send({ success: false, message: err.message || err }))
 }
-
+ 
 exports.removeTeacherFromFields = (req, res) => {
     const { id, fields } = { ...req.params, ...req.body }
 
     teacherFieldsActions.removeTeacherFromFields({ teacherId: id, fields })
-        .then(teacher => res.send({ success: true, teacher }))
+        .then(data => res.send({ success: true, data }))
         .catch(err => res.send({ success: false, message: err.message || err }))
 }
 
