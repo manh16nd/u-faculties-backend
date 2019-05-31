@@ -1,4 +1,4 @@
-const { Teachers, Departments, Users, Fields } = require('../../models')
+const { Teachers, Departments, Users, Topics } = require('../../models')
 const { validateQueryArgs } = require('../../helpers/validators/getQueryValidators')
 const { sendMail } = require('../../helpers/mail')
 const { convertMdToHtml } = require('../../helpers/markdown')
@@ -84,6 +84,11 @@ exports.getTeachers = async (args) => {
         .populate({
             path: 'department',
             model: Departments,
+            select: '_id name'
+        })
+        .populate({
+            path: 'topics',
+            model: Topics,
             select: '_id name'
         })
         .lean()
