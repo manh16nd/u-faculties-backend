@@ -9,6 +9,19 @@ const _validateRemoveFields = (fields, userFields) => {
     return fields.filter((field) => isObjectId(field) && userFields.includes(field))
 }
 
+exports.getTeacherFields = async ({ teacherId }) => {
+    const teacherFields = await TeacherFields.find({
+        teacher: teacherId
+    })
+        .select('field')
+        .populate({
+            path: 'field'
+        })
+        .lean()
+
+    return teacherFields.filter((item) => !!item.field).map(item => item.field)
+}
+
 const _addTeacherToField = async (fieldId, teacher) => {
     const field = await Fields.findOne({
         _id: fieldId

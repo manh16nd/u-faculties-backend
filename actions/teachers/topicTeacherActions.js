@@ -2,24 +2,11 @@ const { Teachers, Topics, TeacherTopics } = require('../../models')
 const { isObjectId } = require('../../helpers/validators/typeValidators')
 
 const _validateTopics = (topics, userTopics) => {
-    const topic = isObjectId(topics)
-    // return topics.filter((topic) => isObjectId(topic) && !userTopics.find(item => {
-    //     const userTopic = item.toString()
-    //     const topicId = topic.toString()
-    //     return userTopic === topicId
-    // }))
-    // return topics.filter((topic) => isObjectId(topic) && !userTopics.includes(topic))
-    if(!userTopics.includes(topic)){
-        return topic
-    }
+    return topics.filter((field) => isObjectId(field) && !userTopics.includes(field))
 }
 
 const _validateRemoveTopics = (topics, userTopics) => {
-    // return topics.filter((topic) => isObjectId(topic) && userFields.includes(topic))
-    const topic = isObjectId(topics)
-    if(userTopics.includes(topic)){
-        return topic
-    }
+    return topics.filter((field) => isObjectId(field) && userTopics.includes(field))
 }
 
 const _addTeacherToTopic = async (topicID, teacher) => {
@@ -84,12 +71,12 @@ exports.addTeacherToTopics = async ({ teacherId, topics }) => {
     }).select('_id topics')
     if (!teacher) throw new Error('Teacher not found')
     const validTopics = _validateTopics(topics, teacher.topics)
-    // const work = validTopics.map((topic) => {
-    //     return _addTeacherToTopic(topic, teacher)
-    // })
-    const work = _addTeacherToTopic(validTopics, teacher)
-    return await work
-    // return await Promise.all(work)
+
+    const work = validTopics.map((topic) => {
+        return _addTeacherToTopic(topic, teacher)
+    })
+
+    return await Promise.all(work)
 }
 
 exports.removeTeacherFromTopics = async ({ teacherId, topics }) => {
@@ -97,11 +84,9 @@ exports.removeTeacherFromTopics = async ({ teacherId, topics }) => {
         _id: teacherId
     }).select('_id topics')
     if (!teacher) throw new Error('Teacher not found')
+
     const validTopics = _validateRemoveTopics(topics, teacher.topics)
-    // const work = validFields.map((topic) => {
-    //     return _removeTeacherFromTopic(topic, teacher)
-    // })
-    const work = _removeTeacherFromTopic(validTopics, teacher)
-    return await work
-    // return await Promise.all(work)
+
+    const work = validTopics.map((topic) => _removeTeacherFromTopic(topic, teacher))
+    return await Promise.all(work)
 }

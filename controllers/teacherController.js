@@ -62,6 +62,14 @@ exports.uploadAvatar = (req, res) => {
 
 const teacherFieldsActions = require('../actions/teachers/teacherFieldsActions')
 
+exports.getTeacherFields = (req, res) => {
+    const { id } = { ...req.params }
+
+    teacherFieldsActions.getTeacherFields({ teacherId: id })
+        .then(data => res.send({ success: true, data }))
+        .catch(err => res.send({ success: false, message: err.message || err }))
+}
+
 exports.addTeacherToFields = (req, res) => {
     const { id, fields } = { ...req.params, ...req.body }
 
@@ -69,7 +77,7 @@ exports.addTeacherToFields = (req, res) => {
         .then(data => res.send({ success: true, data }))
         .catch(err => res.send({ success: false, message: err.message || err }))
 }
- 
+
 exports.removeTeacherFromFields = (req, res) => {
     const { id, fields } = { ...req.params, ...req.body }
 
@@ -101,7 +109,7 @@ exports.removeTeacherFromTopics = (req, res) => {
 }
 
 exports.importExcel = (req, res) => {
-    const {file} = {...req}
+    const { file } = { ...req }
     getTeachersActions.importExcel(file)
         .then(teacher => res.send({ success: true, teacher }))
         .catch(err => res.send({ success: false, message: err.message || err }))

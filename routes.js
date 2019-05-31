@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname)
     }
 })
-const upload = multer({ storage:storage })
+const upload = multer({ storage: storage })
 
 const rootController = require('./controllers/rootController')
 
@@ -25,7 +25,8 @@ router.post('/teachers/excel', upload.single("excel"), teacher.importExcel)
 router.post('/teachers', auth.isAdmin, teacher.addTeacher)
 router.patch('/teachers/:id', teacher.editTeacher)
 router.delete('teachers/:id', teacher.deleteTeacher)
-router.get('/teachers/:id/topics', teacher.getTeacherTopics)
+router.get('/teachers/:id/fields', auth.isTeacher, teacher.getTeacherFields)
+router.get('/teachers/:id/topics', auth.isTeacher, teacher.getTeacherTopics)
 router.delete('/teachers/:id/fields', auth.isTeacher, teacher.removeTeacherFromFields)
 router.delete('/teachers/:id/topics', auth.isTeacher, teacher.removeTeacherFromTopics)
 router.post('/teachers/:id/avatar', auth.isTeacher, upload.single('avatar'), teacher.uploadAvatar)
