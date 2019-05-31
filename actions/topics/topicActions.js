@@ -33,7 +33,7 @@ exports.getOneTopic = async (_id) => {
         .lean()
 }
 
-exports.getFields = async ({limit, page, name}) => {
+exports.getTopics = async ({limit, page, name}) => {
     const validatedArgs = _validateArgs({limit, page, name})
     const query = {
         name: {$regex: new RegExp(`${validatedArgs.name.toLowerCase()}`, 'i')}
@@ -44,6 +44,11 @@ exports.getFields = async ({limit, page, name}) => {
         .find(query)
         .skip(skip)
         .limit(validatedArgs.limit)
+        .populate({
+            path: 'teachers',
+            model: Teachers,
+            select: '_id name'
+        })
         .lean()
     const totalQuery = Topics.countDocuments({})
     const [topics, total] = await Promise.all([topicsQuery, totalQuery])

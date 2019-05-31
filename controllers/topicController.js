@@ -2,7 +2,7 @@ const getTopicActions = require('../actions/topics/topicActions')
 
 exports.getTopics = (req, res) => {
     const {limit, page, name} = {...req.body, ...req.body}
-    getTopicActions.getFields({limit, page, name})
+    getTopicActions.getTopics({limit, page, name})
         .then(data => res.send({
             success: true,
             data

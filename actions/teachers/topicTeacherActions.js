@@ -2,7 +2,6 @@ const { Teachers, Topics, TeacherTopics } = require('../../models')
 const { isObjectId } = require('../../helpers/validators/typeValidators')
 
 const _validateTopics = (topics, userTopics) => {
-    console.log(topics)
     const topic = isObjectId(topics)
     // return topics.filter((topic) => isObjectId(topic) && !userTopics.find(item => {
     //     const userTopic = item.toString()
@@ -15,8 +14,12 @@ const _validateTopics = (topics, userTopics) => {
     }
 }
 
-const _validateRemoveTopics = (topics, userFields) => {
-    return topics.filter((topic) => isObjectId(topic) && userFields.includes(topic))
+const _validateRemoveTopics = (topics, userTopics) => {
+    // return topics.filter((topic) => isObjectId(topic) && userFields.includes(topic))
+    const topic = isObjectId(topics)
+    if(userTopics.includes(topic)){
+        return topic
+    }
 }
 
 const _addTeacherToTopic = async (topicID, teacher) => {
@@ -80,7 +83,6 @@ exports.addTeacherToTopics = async ({ teacherId, topics }) => {
         _id: teacherId
     }).select('_id topics')
     if (!teacher) throw new Error('Teacher not found')
-    console.log("1", topics)
     const validTopics = _validateTopics(topics, teacher.topics)
     // const work = validTopics.map((topic) => {
     //     return _addTeacherToTopic(topic, teacher)
@@ -95,10 +97,11 @@ exports.removeTeacherFromTopics = async ({ teacherId, topics }) => {
         _id: teacherId
     }).select('_id topics')
     if (!teacher) throw new Error('Teacher not found')
-    const validFields = _validateRemoveTopics(topics, teacher.topics)
-    const work = validFields.map((topic) => {
-        return _removeTeacherFromTopic(topic, teacher)
-    })
-
-    return await Promise.all(work)
+    const validTopics = _validateRemoveTopics(topics, teacher.topics)
+    // const work = validFields.map((topic) => {
+    //     return _removeTeacherFromTopic(topic, teacher)
+    // })
+    const work = _removeTeacherFromTopic(validTopics, teacher)
+    return await work
+    // return await Promise.all(work)
 }
