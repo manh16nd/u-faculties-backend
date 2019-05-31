@@ -1,6 +1,7 @@
 const { Fields, Teachers } = require('../../models')
 const { validateQueryArgs } = require('../../helpers/validators/getQueryValidators')
 const { isString, isObjectId, removeRedundant } = require('../../helpers/validators/typeValidators')
+const Promise = require('bluebird')
 
 const _validateArgs = ({ limit, page, name }) => {
     const paging = validateQueryArgs({ limit, page })
@@ -17,6 +18,28 @@ const _validateFieldArgs = (args) => {
     const parent = isObjectId(args.parent)
     const id = isString(args.id)
     return removeRedundant({ id, name, parent })
+}
+
+const _getChildren = async (field) => {
+    const { _id: parent } = field
+    const query = { parent }
+
+    const children = await Fields
+        .find(query)
+        .populate({
+            path: 'teachers',
+            model: Teachers,
+            select: '_id name'
+        })
+        .lean()
+
+    return await Promise.map(children, async (child) => {
+        const grand = await _getChildren(child)
+        return {
+            ...child,
+            children: grand,
+        }
+    })
 }
 
 exports.getFields = async ({ limit, page, name }) => {
@@ -37,12 +60,22 @@ exports.getFields = async ({ limit, page, name }) => {
             select: '_id name'
         })
         .lean()
-    const totalQuery = Fields.countDocuments(query)
+
+    const totalQuery = Fields.countDocuments({})
     const [fields, total] = await Promise.all([fieldsQuery, totalQuery])
+
+    const fieldsTotal = await Promise.map(fields, async (field) => {
+        const children = await _getChildren(field)
+
+        return {
+            ...field,
+            children,
+        }
+    })
 
     return {
         page: validatedArgs.page,
-        fields,
+        fields: fieldsTotal,
         total,
     }
 }
