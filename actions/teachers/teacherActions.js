@@ -166,15 +166,15 @@ exports.editTeacher = async (args) => {
     return await teacher.save()
 }
 
-exports.deleteTeacher = async (id) => {
-    const ID = isString(id)
+exports.deleteTeacher = async ({id}) => {
+    const ID = isObjectId(id)
     const teacher = await Teachers.findOne({
         _id: ID
     }).select('_id user')
-
     const user = await Users.findOne({
         _id: teacher.user
     })
+    console.log('user', user)
     if (!teacher) throw new Error('Teacher not found')
     return await Promise.all([teacher.delete(), user.delete()])
 }
