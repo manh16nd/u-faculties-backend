@@ -1,4 +1,4 @@
-const { Teachers, Departments, Users, Topics } = require('../../models')
+const { Teachers, Departments, Fields, Users, Topics } = require('../../models')
 const { validateQueryArgs } = require('../../helpers/validators/getQueryValidators')
 const { sendMail } = require('../../helpers/mail')
 const { convertMdToHtml } = require('../../helpers/markdown')
@@ -54,6 +54,16 @@ exports.getOneTeacher = async (_id) => {
             model: Departments,
             select: '_id name'
         })
+        .populate({
+            path: 'fields',
+            model: Fields,
+            select: '_id name'
+        })
+        .populate({
+            path: 'topics',
+            model: Topics,
+            select: '_id name'
+        })
         .lean()
 }
 
@@ -89,6 +99,11 @@ exports.getTeachers = async (args) => {
         .populate({
             path: 'topics',
             model: Topics,
+            select: '_id name'
+        })
+        .populate({
+            path: 'fields',
+            model: Fields,
             select: '_id name'
         })
         .lean()
@@ -175,8 +190,7 @@ exports.uploadAvatar = async (file, _id) => {
     })
     if (!teacher) throw new Error('Teacher not found')
 
-    const avatar = await uploadImgur(file.path)
-    teacher.avatar = avatar
+    teacher.avatar = await uploadImgur(file.path)
     return await teacher.save()
 }
 
