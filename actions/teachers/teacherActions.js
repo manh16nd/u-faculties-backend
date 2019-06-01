@@ -92,11 +92,6 @@ exports.getTeachers = async (args) => {
         .skip(skip)
         .limit(limit)
         .populate({
-            path: 'department',
-            model: Departments,
-            select: '_id name'
-        })
-        .populate({
             path: 'topics',
             model: Topics,
             select: '_id name'
@@ -181,7 +176,7 @@ exports.deleteTeacher = async (id) => {
         _id: teacher.user
     })
     if (!teacher) throw new Error('Teacher not found')
-    return await Promise.all([ teacher.delete(), user.delete()])
+    return await Promise.all([teacher.delete(), user.delete()])
 }
 
 exports.uploadAvatar = async (file, _id) => {
