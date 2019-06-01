@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const types = ['Bộ môn']
+const types = ['Bộ môn', 'Phòng']
 
 const departments = new mongoose.Schema({
     name: String,

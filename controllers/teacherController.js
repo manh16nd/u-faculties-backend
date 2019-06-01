@@ -2,9 +2,9 @@ const getTeachersActions = require('../actions/teachers/teacherActions')
 const { verifyHeaders } = require('../helpers/bcrypt')
 
 exports.getTeachers = (req, res) => {
-    const { limit, page, name, email, vnuEmail, phone, address, website, degree, position } = { ...req.query }
+    const { limit, page, name, email, vnuEmail, phone, address, website, degree, position, department, topics } = { ...req.query }
 
-    getTeachersActions.getTeachers({ limit, page, name, email, vnuEmail, phone, address, website, degree, position })
+    getTeachersActions.getTeachers({ limit, page, name, email, vnuEmail, phone, address, website, degree, department, position, topics })
         .then(data => res.send({ success: true, data }))
         .catch(err => res.send({ success: false, message: err.message || err }))
 }

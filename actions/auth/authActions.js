@@ -9,7 +9,7 @@ exports.login = async (username, password) => {
         .select('_id username password type')
 
     if (!user) throw new Error('User not found')
-    console.log(user.password)
+
     if (!compareHash(password, user.password)) throw new Error('Wrong password')
 
     const token = await Tokens.findOne({ user: user._id })
@@ -59,13 +59,17 @@ exports.changePassword = async ({ username, password, oldPassword, currentUser }
 
     const value = createHash(String(new Date().getTime()))
     const newToken = new Tokens({ user: user._id, value })
+    const teacher = user.type === 'teacher' && await Teachers.findOne({ user: user._id }).select('_id')
     await Tokens.deleteMany({ user: user._id })
     await newToken.save()
 
     return {
         username,
         type: user.type,
-        token: signJwt({ username, type: user.type, value })
+        token: signJwt({
+            username, type: user.type, value,
+            teacher: teacher._id
+        })
     }
 }
 
@@ -73,7 +77,7 @@ const _validateArgs = (username, password, type) => {
     const validUsername = isString(username)
     const validPassword = isString(password)
     const validType = isString(type)
-    console.log('username: ' + validUsername + ' password: ' + validPassword + ' type: ' + validType)
+    
     return removeRedundant({ username: validUsername, password: validPassword, type: validType })
 }
 

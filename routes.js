@@ -42,6 +42,7 @@ router.get('/departments/types', department.getDepartmentTypes)
 
 const fields = require('./controllers/fieldController')
 router.get('/fields', fields.getFields)
+router.get('/fields/all', fields.getAllFields)
 router.get('/fields/:id', fields.getOneField)
 router.post('/fields', fields.addFields)
 router.patch('/fields/:id', fields.editFields)

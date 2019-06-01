@@ -20,8 +20,8 @@ const _validateArgs = (args) => {
     const id = isObjectId(args.id)
     const fields = isArray(args.fields)
     const department = isObjectId(args.department)
-
-    return removeRedundant({ id, page, address, department, limit, name, email, vnuEmail, phone, website, degree, position, fields })
+    const topics = isObjectId(args.topics)
+    return removeRedundant({ id, page, topics, address, department, limit, name, email, vnuEmail, phone, website, degree, position, fields })
 }
 
 const _validateNewTeacherArgs = (args) => {
@@ -68,7 +68,6 @@ exports.getOneTeacher = async (_id) => {
 }
 
 exports.getTeacherByUser = async (user) => {
-    console.log(user)
     if (!user) return null
 
     return await Teachers.findOne({
@@ -80,11 +79,19 @@ exports.getTeacherByUser = async (user) => {
 exports.getTeachers = async (args) => {
     const validatedArgs = _validateArgs(args)
     const { limit, page, ...query } = validatedArgs
+    console.log("TCL: exports.getTeachers -> validatedArgs", validatedArgs)
 
-    const getQuery = Object.keys(query).reduce((q, key) => ({
-        ...q,
-        [key]: { $regex: new RegExp(`${query[key].toLowerCase()}`, 'i') }
-    }), {})
+    const getQuery = {
+        name: { $regex: new RegExp(`${(query['name'] || '').toLowerCase()}`, 'i') },
+        ...{ ...query.department && { department: query.department } },
+        ...{
+            ...query.topics && {
+                topics: {
+                    $elemMatch: { $eq: query.topics }
+                }
+            }
+        }
+    }
     const skip = (page - 1) * limit
 
     const teacherQuery = Teachers
@@ -136,11 +143,14 @@ const addTeacher = async (args) => {
     const token = signJwt({
         username: validatedTeacher.username
     })
-    const token_link = "https://u-faculties.herokuapp.com/newUser?token=" + token
+    const token_link = `http://127.0.0.1:5000/newUser?token=${token}&username=${validatedTeacher.username}`
     const teacher = await newTeacher.save()
     const title = 'u-Faculties registration'
     const body = `##Change your password\n
-        Click [here](${token_link}) to change your password`
+    Your token: ${token}
+    Your username: ${validatedTeacher.username}
+    Register link: ${token_link}
+    `
     const mail = await sendMail({ receiver: validatedTeacher.email, title, body: convertMdToHtml(body) })
 
     return { user, teacher, mail }
@@ -166,7 +176,7 @@ exports.editTeacher = async (args) => {
     return await teacher.save()
 }
 
-exports.deleteTeacher = async ({id}) => {
+exports.deleteTeacher = async ({ id }) => {
     const ID = isObjectId(id)
     const teacher = await Teachers.findOne({
         _id: ID

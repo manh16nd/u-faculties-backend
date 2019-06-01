@@ -42,6 +42,15 @@ const _getChildren = async (field) => {
     })
 }
 
+exports.getAllFields = async () => {
+    const [fields, total] = await Promise.all([
+        Fields.find({}),
+        Fields.countDocuments({}),
+    ])
+
+    return { fields, total }
+}
+
 exports.getFields = async ({ limit, page, name }) => {
     const validatedArgs = _validateArgs({ limit, page, name })
     const query = {
