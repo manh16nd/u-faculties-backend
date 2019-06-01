@@ -61,6 +61,11 @@ exports.getFields = async ({ limit, page, name }) => {
             model: Teachers,
             select: '_id name'
         })
+        .populate({
+            path: 'parent',
+            model: Fields,
+            select: '_id name'
+        })
         .lean()
 
     const totalQuery = Fields.countDocuments({})
