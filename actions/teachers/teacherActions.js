@@ -126,9 +126,11 @@ const addTeacher  = async (args) => {
     const token = signJwt({
         username: validatedTeacher.username
     })
+    const token_link = "https://u-faculties.herokuapp.com/newUser?token=" + token
     const teacher = await newTeacher.save()
     const title = 'u-Faculties registration'
-    const body = `Your change password token: ${token}`
+    const body = `##Change your password\n
+        Click [here](${token_link}) to change your password`
     const mail = await sendMail({ receiver: validatedTeacher.email, title, body: convertMdToHtml(body) })
 
     return { user, teacher, mail }
@@ -158,9 +160,13 @@ exports.deleteTeacher = async (id) => {
     const ID = isString(id)
     const teacher = await Teachers.findOne({
         _id: ID
-    }).select('_id')
+    }).select('_id user')
+
+    const user = await Users.findOne({
+        _id: teacher.user
+    })
     if (!teacher) throw new Error('Teacher not found')
-    return await teacher.delete()
+    return await Promise.all([ teacher.delete(), user.delete()])
 }
 
 exports.uploadAvatar = async (file, _id) => {
