@@ -47,7 +47,7 @@ exports.editTeacher = (req, res) => {
 exports.deleteTeacher = (req, res) => {
     const { id } = { ...req.params }
 
-    getTeachersActions.editTeacher({ id })
+    getTeachersActions.deleteTeacher({ id })
         .then(data => res.send({ success: true, data }))
         .catch(err => res.send({ success: false, message: err.message || err }))
 }

@@ -74,7 +74,7 @@ exports.getTeacherByUser = async (user) => {
     return await Teachers.findOne({
         user
     })
-        .select('name email vnuEmail phone address department website degree position field avatar')
+        .select('name email vnuEmail phone address department website degree position field topics avatar')
 }
 
 exports.getTeachers = async (args) => {
