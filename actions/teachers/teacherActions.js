@@ -19,8 +19,9 @@ const _validateArgs = (args) => {
     const position = isString(args.position)
     const id = isObjectId(args.id)
     const fields = isArray(args.fields)
+    const department = isObjectId(args.department)
 
-    return removeRedundant({ id, page, address, limit, name, email, vnuEmail, phone, website, degree, position, fields })
+    return removeRedundant({ id, page, address, department, limit, name, email, vnuEmail, phone, website, degree, position, fields })
 }
 
 const _validateNewTeacherArgs = (args) => {
@@ -33,12 +34,11 @@ const _validateNewTeacherArgs = (args) => {
     const website = isString(args.website)
     const degree = isString(args.degree)
     const position = isString(args.position)
-    const department = isObjectId(args.department)
     const field = isObjectId(args.field)
 
     console.log(username, name, email)
     // if (!username || !name || !email) throw new Error('Missing params')
-    return removeRedundant({ username, address, department, name, email, vnuEmail, phone, website, degree, position, field })
+    return removeRedundant({ username, address, department: args.department, name, email, vnuEmail, phone, website, degree, position, field })
 }
 
 exports.getOneTeacher = async (_id) => {
@@ -102,7 +102,7 @@ exports.getTeachers = async (args) => {
     }
 }
 
-const addTeacher  = async (args) => {
+const addTeacher = async (args) => {
     const validatedTeacher = _validateNewTeacherArgs(args)
 
     const existUser = await Users.findOne({

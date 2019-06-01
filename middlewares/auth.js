@@ -36,7 +36,7 @@ exports.isAdmin = (req, res, next) => {
         const user = verifyHeaders(authorization)
         getUserInfo(user)
             .then(success => {
-                if (user.type !== 'admin' || user.type !== 'staff') return res.status(403).send({ success: 'false', message: 'Permission denied' })
+                if (user.type !== 'admin' && user.type !== 'staff') return res.status(403).send({ success: 'false', message: 'Permission denied' })
 
                 req.body.currentUser = user
                 next()
