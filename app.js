@@ -16,7 +16,7 @@ app.options('*', cors())
 
 const mongoose = require('mongoose')
 mongoose.set('debug', true)
-mongoose.connect('mongodb://webappdev:k61ca2@ds237196.mlab.com:37196/u-faculties', { useNewUrlParser: true })
+mongoose.connect('mongodb://127.0.0.1/u-faculties', { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function () {
